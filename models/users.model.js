@@ -153,7 +153,7 @@ userSchema.statics.login = async function (email, password) {
 userSchema.methods.generateToken = async function () {
   const user = this;
   const token = jwt.sign(
-    { _id: user._id, userRole: user.userRole },
+    { _id: user._id },
     process.env.jwtKey
   );
   user.tokens = user.tokens.concat({ token });

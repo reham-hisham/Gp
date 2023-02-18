@@ -19,5 +19,4 @@ const jopPostModel = require( '../../models/jopPost.model' );
         }
     }
  }
-
  module.exports = posts

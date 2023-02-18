@@ -2,13 +2,10 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 require("dotenv").config();
-
+require("../models/Connection/databaseConnection");
 app.use(cors());
-
 app.use(express.json());
 
-
-require("../models/Connection/databaseConnection");
 const adminRoute = require('./admin.Route')
 const userRoute = require('./user.Route')
 const CompanyRoute = require('./Company.Route.js')

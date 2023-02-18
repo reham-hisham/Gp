@@ -1,14 +1,17 @@
 const userModel = require("../../models/users.model");
-
+const cloudinaryhelper = require("../../middleware/cloudinary");
+const isImage = require('is-image');
 const otp = require("../../helper/sendOTP");
 const sendEmail = require("../../helper/sendEmail");
 
+
+// Get instance by resolving ClamScan promise object
+
+// OTP = 0 -> can login
 class User {
   static register = async (req, res) => {
     try {
       const userData = new userModel(req.body);
-      userData.OTP = -1;
-
       await userData.save();
       await this.SendOTP(req, res);
       res.status(200).send();
@@ -20,6 +23,49 @@ class User {
       });
     }
   };
+   
+  static addCV = async (req, res) => {
+    try {
+      let user = await userModel.findOne({ _id: req.user._id });
+      const uploadedData = await cloudinaryhelper({
+        path: req.file.path,
+        folder: `${user.id}/cv`,
+      });
+
+      user.cv = uploadedData.secure_url;
+      await user.save();
+
+      res.send();
+    } catch (error) {
+      res.status(400).send({
+        apiStatus: false,
+        data: error.message,
+      });
+    }
+  };
+  static addImage = async (req, res) => {
+    try {
+     if(!isImage(req.file.originalname)){
+      throw new Error ("only images allowed")
+     }
+      let user = await userModel.findOne({ _id: req.user._id });
+      const uploadedData = await cloudinaryhelper({
+        path: req.file.path,
+        folder: user._id,
+      });
+
+      user.image = uploadedData.secure_url;
+      console.log(user.image);
+      await user.save();
+
+      res.send();
+    } catch (error) {
+      res.status(400).send({
+        apiStatus: false,
+        data: error.message,
+      });
+    }
+  };
   static login = async (req, res) => {
     try {
       const userData = await userModel.login(req.body.email, req.body.password);
@@ -27,7 +73,7 @@ class User {
         throw new Error("Blocked ");
       }
       const token = await userData.generateToken();
-      if (userData.OTP == null || userData.OTP == -1) {
+      if (userData.OTP != 0) {
         console.log(userData.OTP);
         throw new Error("please validate your account first");
       }
@@ -96,7 +142,7 @@ class User {
 
   static deleteSingleAcount = async (req, res) => {
     try {
-      const user = await userModel.deleteOne({ id: req.params.id });
+      const user = await userModel.deleteOne({ id: req.user._id });
       res.send("Account Deleted");
     } catch (e) {
       res.status(400).send({
@@ -136,15 +182,15 @@ class User {
       let user = await userModel.findOne({ email: req.body.email });
       if (user) {
         let Otp = otp(6);
-        console.log(user);
+
         await sendEmail({
           userEmail: req.body.email,
-          subject: "Reset Your Password",
-          contant: ` Plaese enter this ${Otp} to reset your password`,
+          subject: "welcom ",
+          contant: ` Plaese enter this otp : ${Otp} to confirm your email`,
         });
         user.OTP = Otp;
         await user.save();
-        return res.send({ email: req.body.email, id: user._id  ,otp :Otp});
+        return res.send({ email: req.body.email, id: user._id, otp: Otp });
       } else {
         throw new Error("user not fount in server");
       }
@@ -158,7 +204,6 @@ class User {
 
   static confiremOtp = async (req, res) => {
     try {
-    
       let user = await userModel.findOne({ email: req.body.email });
 
       if (req.body.OTP == user.OTP) {
@@ -184,7 +229,7 @@ class User {
       }
 
       user.password = req.body.password;
-      user.OTP = -1;
+      user.OTP = 0;
       user.save();
       res.send();
     } catch (error) {
