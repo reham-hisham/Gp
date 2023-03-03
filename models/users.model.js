@@ -79,22 +79,32 @@ const userSchema = mongoose.Schema(
         type:String ,
         required:true
     },
+    jobTitles:{
+      type:Array,
+      required:true
+     },
+     minSalary:{
+      value:{type: Number,
+        required:true},
+        currency:String
+      },
+      industry:{
+        type:String,
+        required:true
+       },
     yearsOfExperience:Number,
     image:String,
     cv:String,
     skills:[
-      {skill:{
+      {
         SkillName: String,
         yearsOfExperience: { minYears: Number, maxYears: Number },
         
       },
       
-    }
+    
     ],
-   jobTitles:{
-    type:Array,
-    required:true
-   },
+  
 
    currentCareerlevel:{
     enum:['Student','Entry Level', 'Experienced' ,'Manager','senior Management'],
@@ -113,15 +123,8 @@ const userSchema = mongoose.Schema(
   GraduationYear:String,
   Grade:String,
   languages:[],
-  industry:{
-   type:String,
-   required:true
-  },
-  minSalary:{
-  value:{type: Number,
-    required:true},
-    currency:String
-  },
+
+ 
 
   },
   { timeStamp: true }

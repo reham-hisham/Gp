@@ -1,9 +1,8 @@
 const userModel = require("../../models/users.model");
 const cloudinaryhelper = require("../../middleware/cloudinary");
-const isImage = require('is-image');
+const isImage = require("is-image");
 const otp = require("../../helper/sendOTP");
 const sendEmail = require("../../helper/sendEmail");
-
 
 // Get instance by resolving ClamScan promise object
 
@@ -23,7 +22,7 @@ class User {
       });
     }
   };
-   
+
   static addCV = async (req, res) => {
     try {
       let user = await userModel.findOne({ _id: req.user._id });
@@ -45,9 +44,9 @@ class User {
   };
   static addImage = async (req, res) => {
     try {
-     if(!isImage(req.file.originalname)){
-      throw new Error ("only images allowed")
-     }
+      if (!isImage(req.file.originalname)) {
+        throw new Error("only images allowed");
+      }
       let user = await userModel.findOne({ _id: req.user._id });
       const uploadedData = await cloudinaryhelper({
         path: req.file.path,
@@ -69,6 +68,7 @@ class User {
   static login = async (req, res) => {
     try {
       const userData = await userModel.login(req.body.email, req.body.password);
+      console.log(userData)
       if (userData.isBlocked) {
         throw new Error("Blocked ");
       }
@@ -107,22 +107,10 @@ class User {
 
   //error
   static getUserData = async (req, res) => {
-    console.log(req.user.name);
-    console.log(country);
-    res.send({
-      apiStatus: true,
-      data: {
-        name: req.user.name,
-        number: req.user.number,
-        email: req.user.email,
-        birthdate: req.user.birthdate,
-        country: req.user.country,
-        CountryID: country.id,
-        city: req.user.city,
-        address: req.user.address,
-      },
-      message: "data featched",
-    });
+    console.log(req.user.skills[0]);
+   req.user.password =null
+   req.user.tokens = null
+    res.send(req.user);
   };
 
   static logout = async (req, res) => {
@@ -158,9 +146,8 @@ class User {
       if (req.body.password) {
         throw new Error("canpt rest password from here");
       }
-      console.log(req.user);
-      const userUpdated = await userModel.updateOne(
-        { id: req.user._id },
+      const userUpdated = await userModel.findByIdAndUpdate(
+         req.user._id ,
         req.body,
         { upsert: false, runValidators: true }
       );
@@ -204,12 +191,13 @@ class User {
 
   static confiremOtp = async (req, res) => {
     try {
-      let user = await userModel.findOne({ email: req.body.email });
 
+      let user = await userModel.findOne({ email: req.body.email });
+      console.log(user)
       if (req.body.OTP == user.OTP) {
         user.OTP = 0;
-        user.save();
-        console.log(user);
+      await  user.save();
+      
         res.send({ id: user._id });
       } else {
         throw new Error("Otp not valid ");
