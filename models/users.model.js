@@ -98,7 +98,7 @@ const userSchema = mongoose.Schema(
     skills:[
       {
         SkillName: String,
-        yearsOfExperience: { minYears: Number, maxYears: Number },
+        yearsOfExperience:Number,
         
       },
       
