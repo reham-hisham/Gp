@@ -51,9 +51,8 @@ class company {
 
   static confiremOtp = async (req, res) => {
     try {
-      console.log("hejeiorwe");
       let user = await CompanyModel.findOne({ email: req.body.email });
-
+      if(!user){ throw new Error("companty not found email not found")}
       if (req.body.OTP == user.OTP) {
         user.OTP = 0;
         user.save();
@@ -112,20 +111,21 @@ class company {
   };
 
   //error
-  static getUserData = async (req, res) => {
-    console.log(req.user.name);
-    console.log(country);
+  static getCompanyData = async (req, res) => {
+ 
     res.send({
       apiStatus: true,
       data: {
-        name: req.user.name,
-        number: req.user.number,
-        email: req.user.email,
-        birthdate: req.user.birthdate,
-        country: req.user.country,
-        CountryID: country.id,
-        city: req.user.city,
-        address: req.user.address,
+        name: req.company.name,
+        number: req.company.number,
+        email: req.company.email,
+        about: req.company.about,
+        country: req.company.country,
+        image: req.company.image,
+        city: req.company.city,
+        numberOfemployee: req.company.numberOfemployee,
+      
+
       },
       message: "data featched",
     });

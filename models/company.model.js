@@ -15,7 +15,10 @@ const CompanySchema = mongoose.Schema(
       required: true,
     },
     about:String,
-    industry :String,
+    industry :{
+    type:String,
+    required:true
+    },
     number: {
       type: String,
       required: true,

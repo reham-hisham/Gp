@@ -107,7 +107,6 @@ class User {
 
   //error
   static getUserData = async (req, res) => {
-    console.log(req.user.skills[0]);
    req.user.password =null
    req.user.tokens = null
     res.send(req.user);
@@ -130,7 +129,7 @@ class User {
 
   static deleteSingleAcount = async (req, res) => {
     try {
-      const user = await userModel.deleteOne({ id: req.user._id });
+    await userModel.deleteOne({ id: req.user._id });
       res.send("Account Deleted");
     } catch (e) {
       res.status(400).send({

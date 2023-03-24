@@ -7,4 +7,7 @@ router.post("/registration",companyProfileController.register)
 router.post('/confirmation',companyProfileController.confiremOtp )
 router.post('/login',companyProfileController.login)
 router.post("/post",companyAuth, CompanyPostController.create);
+router.post("/logout",companyAuth, companyProfileController.logout);
+router.get("/profile", companyAuth , companyProfileController.getCompanyData)
+
  module.exports = router
