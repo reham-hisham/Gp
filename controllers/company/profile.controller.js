@@ -1,4 +1,6 @@
 const CompanyModel = require("../../models/company.model");
+const isImage = require("is-image");
+const cloudinaryhelper = require("../../middleware/cloudinary");
 
 const otp = require("../../helper/sendOTP");
 const sendEmail = require("../../helper/sendEmail");
@@ -94,23 +96,31 @@ class company {
       });
     }
   };
-  /*not working*/
+
   static uploadProfileImage = async (req, res) => {
     try {
-      req.user.image = req.file.destination;
-      await req.user.save();
-      res.send({
-        apiStatus: true,
-        data: req.user,
+      if (!isImage(req.file.originalname)) {
+        throw new Error("only images allowed");
+      }
+      let user = await CompanyModel.findOne({ _id: req.company._id });
+      const uploadedData = await cloudinaryhelper({
+        path: req.file.path,
+        folder: `compnay/${user._id}`,
       });
-    } catch (e) {
+
+      user.image = uploadedData.secure_url;
+      await user.save();
+
+      res.send(user.image);
+    } catch (error) {
       res.status(400).send({
         apiStatus: false,
+        data: error.message,
       });
     }
   };
 
-  //error
+
   static getCompanyData = async (req, res) => {
  
     res.send({
@@ -132,10 +142,10 @@ class company {
   };
 
   static logout = async (req, res) => {
-    // remove token
     try {
-      req.user.tokens = req.user.tokens.filter((tok) => req.token != tok.token);
-      await req.user.save();
+     
+      req.company.tokens = req.company.tokens.filter((tok) => req.token != tok.token);
+      await req.company.save();
       res.send("logged out");
     } catch (e) {
       res.status(400).send({
