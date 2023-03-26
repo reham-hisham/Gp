@@ -70,62 +70,68 @@ const userSchema = mongoose.Schema(
       {
         token: {
           type: String,
-          required: true,
           trim: true,
         },
       },
     ],
-    title:{
-        type:String ,
-        required:true
+    title: {
+      type: String,
     },
-    jobTitles:{
-      type:Array,
-      required:true
-     },
-     minSalary:{
-      value:{type: Number,
-        required:true},
-        currency:String
-      },
-      industry:{
-        type:String,
-        required:true
-       },
-    yearsOfExperience:Number,
-    image:String,
-    cv:String,
-    skills:[
+    jobTitles: {
+      type: Array,
+      required: true,
+    },
+    minSalary: {
+      value: { type: Number, required: true },
+      currency: String,
+    },
+    industry: {
+      type: String,
+    },
+    yearsOfExperience: Number,
+    image: String,
+    cv: String,
+    skills: [
       {
         SkillName: String,
-        yearsOfExperience:Number,
-        
+        yearsOfExperience: Number,
       },
-      
-    
     ],
-  
 
-   currentCareerlevel:{
-    enum:['Student','Entry Level', 'Experienced' ,'Manager','senior Management'],
-  
-  },
-  jopType:{
-    enum:['Full Time','Part Time', 'Freelance' ,'intership','Remotly' ,'volunteering' ],
-  
-  },
-  currentEducationalLevel:{
-    enum:['Bachelors Degree','Master Degree', 'Doctorate Degree' ,'High school','Vocational', 'Diploma'],
-   
-  },
-  fieldOfStudy:String,
-  University:String,
-  GraduationYear:String,
-  Grade:String,
-  languages:[],
-
- 
-
+    currentCareerlevel: {
+      enum: [
+        "Student",
+        "Entry Level",
+        "Experienced",
+        "Manager",
+        "senior Management",
+      ],
+    },
+    jopType: {
+      enum: [
+        "Full Time",
+        "Part Time",
+        "Freelance",
+        "intership",
+        "Remotly",
+        "volunteering",
+      ],
+    },
+    currentEducationalLevel: {
+      enum: [
+        "Bachelors Degree",
+        "Master Degree",
+        "Doctorate Degree",
+        "High school",
+        "Vocational",
+        "Diploma",
+      ],
+    },
+    fieldOfStudy: String,
+    University: String,
+    GraduationYear: String,
+    Grade: String,
+    languages: [],
   },
   { timeStamp: true }
 );
@@ -155,10 +161,7 @@ userSchema.statics.login = async function (email, password) {
 };
 userSchema.methods.generateToken = async function () {
   const user = this;
-  const token = jwt.sign(
-    { _id: user._id },
-    process.env.jwtKey
-  );
+  const token = jwt.sign({ _id: user._id }, process.env.jwtKey);
   user.tokens = user.tokens.concat({ token });
   await user.save();
   return token;
