@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const post = require('../models/jopPost.model')
 const multer = require("multer");
-
+const postController = require('../controllers/company/post.controller')
 const upload = multer({ dest: "images/" });
 
 const CompanyPostController = require('../controllers/company/post.controller')

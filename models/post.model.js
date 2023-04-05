@@ -2,16 +2,13 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const reactionSchema = new Schema({
-  type: {
-    type: String,
-    enum: ['like', 'love', 'wow', 'sad', 'angry'],
-    required: true
-  },
+ 
+  
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'user',
     required: true
   }
+
 });
 
 const commentSchema = new Schema({
@@ -21,7 +18,7 @@ const commentSchema = new Schema({
   },
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'user',
+
     required: true
   }
 });
@@ -36,7 +33,7 @@ const postSchema = new Schema({
   },
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Company',
     required: true
   },
   reactions: [reactionSchema],
@@ -44,6 +41,36 @@ const postSchema = new Schema({
 }, {
   timestamps: true
 });
+postSchema.virtual('reactionsUsers' , {
+  ref:'User',
+  localField:'reactions.user',
+  foreignField :'_id',
+
+
+})
+postSchema.virtual('reactionsCompany' , {
+  ref:'Company',
+  localField:'reactions.user',
+  foreignField :'_id'
+  ,        strictPopulate: false,
+
+})
+postSchema.virtual('commentsUsers' , {
+  ref:'User',
+  localField:'comments.user',
+  foreignField :'_id',
+
+
+})
+postSchema.virtual('commentsCompany' , {
+  ref:'Company',
+  localField:'comments.user',
+  foreignField :'_id'
+  ,        strictPopulate: false,
+
+})
+postSchema.set('toObject',{virtuals:true},{strictPopulate:false})
+postSchema.set('toJSON',{virtuals:true},{strictPopulate:false})
 
 const Post = mongoose.model('Post', postSchema);
 

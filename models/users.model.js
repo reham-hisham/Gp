@@ -60,11 +60,6 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    userRole: {
-      type: String,
-      enum: ["admin", "User", "SuperAdmin"],
-      default: "User",
-    },
     isBlocked: { type: Boolean, default: false },
     tokens: [
       {
@@ -166,5 +161,5 @@ userSchema.methods.generateToken = async function () {
   await user.save();
   return token;
 };
-const user = mongoose.model("user", userSchema);
+const user = mongoose.model("User", userSchema);
 module.exports = user;

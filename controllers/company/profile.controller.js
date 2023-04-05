@@ -54,7 +54,9 @@ class company {
   static confiremOtp = async (req, res) => {
     try {
       let user = await CompanyModel.findOne({ email: req.body.email });
-      if(!user){ throw new Error("companty not found email not found")}
+      if (!user) {
+        throw new Error("companty not found email not found");
+      }
       if (req.body.OTP == user.OTP) {
         user.OTP = 0;
         user.save();
@@ -102,7 +104,7 @@ class company {
       if (!isImage(req.file.originalname)) {
         throw new Error("only images allowed");
       }
-      let user = await CompanyModel.findOne({ _id: req.company._id });
+      let user = await CompanyModel.findOne({ _id: req.user._id });
       const uploadedData = await cloudinaryhelper({
         path: req.file.path,
         folder: `compnay/${user._id}`,
@@ -120,22 +122,18 @@ class company {
     }
   };
 
-
   static getCompanyData = async (req, res) => {
- 
     res.send({
       apiStatus: true,
       data: {
-        name: req.company.name,
-        number: req.company.number,
-        email: req.company.email,
-        about: req.company.about,
-        country: req.company.country,
-        image: req.company.image,
-        city: req.company.city,
-        numberOfemployee: req.company.numberOfemployee,
-      
-
+        name: req.user.name,
+        number: req.user.number,
+        email: req.user.email,
+        about: req.user.about,
+        country: req.user.country,
+        image: req.user.image,
+        city: req.user.city,
+        numberOfemployee: req.user.numberOfemployee,
       },
       message: "data featched",
     });
@@ -143,9 +141,8 @@ class company {
 
   static logout = async (req, res) => {
     try {
-     
-      req.company.tokens = req.company.tokens.filter((tok) => req.token != tok.token);
-      await req.company.save();
+      req.user.tokens = req.user.tokens.filter((tok) => req.token != tok.token);
+      await req.user.save();
       res.send("logged out");
     } catch (e) {
       res.status(400).send({

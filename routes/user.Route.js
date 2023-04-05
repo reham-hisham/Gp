@@ -2,9 +2,10 @@ const router = require("express").Router();
 const auth = require('../middleware/auth')
 const userController = require(".././controllers/user/profile.controller");
 const multer = require("multer");
-
+const postController = require('../controllers/company/post.controller')
 const upload = multer({ dest: "images/" });
 const oldposts = require('../models/oldJops.model')
+const companyUserAuth = require('../middleware/companyUserAuth')
 //router.post("/profile", userController.uploadProfileImage);
 //////////////// user ////////////////////////////////////
 router.post("/register", userController.register); //Done
@@ -33,6 +34,9 @@ router.post(
 router.post("/sendOTP", userController.SendOTP);//DONE
 router.post("/EnterOtp", userController.confiremOtp);//DONE
 router.post("/resetPassword/:id",userController.ResetPassword);//DONE
+router.post('/reaction/:id' , companyUserAuth , postController.addReaction)
+router.get('/reactions/:id', postController.getAllReactions)
+router.get('/comments/:id', postController.getComments)
 
-
+router.post('/comment/:id' , companyUserAuth , postController.addComment)
 module.exports = router;
