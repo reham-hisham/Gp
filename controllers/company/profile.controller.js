@@ -6,8 +6,8 @@ const otp = require("../../helper/sendOTP");
 const sendEmail = require("../../helper/sendEmail");
 const oldposts = require("../../models/oldJops.model");
 const jopPost = require("../../models/jopPost.model");
-
-class company {
+const Image = require('../common/image.controller')
+class company extends Image{
   static register = async (req, res) => {
     try {
       const CompanyData = new CompanyModel(req.body);
@@ -100,28 +100,11 @@ class company {
   };
 
   static uploadProfileImage = async (req, res) => {
-    try {
-      if (!isImage(req.file.originalname)) {
-        throw new Error("only images allowed");
-      }
-      let user = await CompanyModel.findOne({ _id: req.user._id });
-      const uploadedData = await cloudinaryhelper({
-        path: req.file.path,
-        folder: `compnay/${user._id}`,
-      });
-
-      user.image = uploadedData.secure_url;
-      await user.save();
-
-      res.send(user.image);
-    } catch (error) {
-      res.status(400).send({
-        apiStatus: false,
-        data: error.message,
-      });
-    }
+   this.uploadImage(req, res);
   };
-
+static deleteProfileImage = async (req , res)=>{
+  this.deleteImage(req, res)
+}
   static getCompanyData = async (req, res) => {
     res.send({
       apiStatus: true,

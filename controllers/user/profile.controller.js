@@ -3,11 +3,13 @@ const cloudinaryhelper = require("../../middleware/cloudinary");
 const isImage = require("is-image");
 const otp = require("../../helper/sendOTP");
 const sendEmail = require("../../helper/sendEmail");
+const cloudinary = require("cloudinary");
+const Image = require( "../common/image.controller" );
 
 // Get instance by resolving ClamScan promise object
 
 // OTP = 0 -> can login
-class User {
+class User extends Image{
   static register = async (req, res) => {
     try {
       const userData = new userModel(req.body);
@@ -89,21 +91,10 @@ class User {
       });
     }
   };
-  /*not working*/
-  static uploadProfileImage = async (req, res) => {
-    try {
-      req.user.image = req.file.destination;
-      await req.user.save();
-      res.send({
-        apiStatus: true,
-        data: req.user,
-      });
-    } catch (e) {
-      res.status(400).send({
-        apiStatus: false,
-      });
-    }
-  };
+
+static deleteProfileImage = async (req , res )=>{
+ this.deleteImage(req, res)
+};
 
   //error
   static getUserData = async (req, res) => {

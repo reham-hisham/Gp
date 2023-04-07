@@ -12,7 +12,7 @@ class posts {
       res.status(400).send({
         apiStatus: false,
         data: error.message,
-        message: "error adding user",
+        message: "error adding post",
       });
     }
   };

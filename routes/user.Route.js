@@ -14,6 +14,8 @@ router.post("/logout",auth, userController.logout);
 router.get("/info",auth, userController.getUserData);//DONE
 router.post("/deleteAccount", auth,userController.deleteSingleAcount);//DONE
 router.post("/edit", auth,userController.edit); //DONE
+router.post("/deleteProfileImage", auth,userController.deleteProfileImage); //DONE
+
 // add image 
 router.post(
     "/userImage",
