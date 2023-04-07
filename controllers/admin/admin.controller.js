@@ -24,6 +24,19 @@ class Admin {
       });
     }
   };
-
+  static register = async (req, res) => {
+    try {
+      const admin = new AdminModel(req.body);
+      await admin.save();
+     
+      res.status(200).send();
+    } catch (e) {
+      res.status(400).send({
+        apiStatus: false,
+        data: e.message,
+        message: "error adding user",
+      });
+    }
+  };
 }
 module.exports = Admin;
