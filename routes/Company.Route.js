@@ -1,9 +1,8 @@
 const router = require('express').Router()
 const post = require('../models/jopPost.model')
 const multer = require("multer");
-const postController = require('../controllers/company/post.controller')
 const upload = multer({ dest: "images/" });
-
+const jopPostController = require('../controllers/company/jobpost.controller')
 const CompanyPostController = require('../controllers/company/post.controller')
 const companyProfileController = require('../controllers/company/profile.controller')
 const companyAuth = require('../middleware/company')
@@ -20,4 +19,5 @@ router.post(
   
     companyProfileController.uploadProfileImage
   );
+  router.post('/edit' , companyAuth , companyProfileController.edit)
  module.exports = router

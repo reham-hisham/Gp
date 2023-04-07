@@ -154,12 +154,18 @@ static deleteProfileImage = async (req , res)=>{
       if (req.body.password) {
         throw new Error("canpt rest password from here");
       }
-      console.log(req.user);
-      const userUpdated = await CompanyModel.updateOne(
+    
+      if(req.user.email == req.body.email){
+        
+        delete req.body.email
+      }
+      
+       const userUpdated = await CompanyModel.updateOne(
         { id: req.user._id },
         req.body,
         { upsert: false, runValidators: true }
       );
+      
       res.send({
         apiStatus: true,
         data: userUpdated,
