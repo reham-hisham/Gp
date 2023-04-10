@@ -98,5 +98,17 @@ class posts {
       });
     }
   };
+  static deletePost = async (req, res)=>{
+    try {
+      await PostModel.findOneAndDelete({_id:req.params.id , user:req.user._id})
+      res.send("deleted")
+    } catch (error) {
+      res.status(400).send({
+        apiStatus: false,
+        error: error.message,
+        message: "error delete post",
+      });
+    }
+  }
 }
 module.exports = posts;

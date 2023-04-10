@@ -20,4 +20,5 @@ router.post(
     companyProfileController.uploadProfileImage
   );
   router.post('/edit' , companyAuth , companyProfileController.edit)
+  router.delete('/delete/post/:id', companyAuth , CompanyPostController.deletePost)
  module.exports = router

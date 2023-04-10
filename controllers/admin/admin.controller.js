@@ -1,13 +1,13 @@
 const AdminModel = require("../../models/Admin.model");
-
+const PostModel = require("../../models/post.model")
+const Email = require('../../helper/sendEmail')
 class Admin {
 
   static login = async (req, res) => {
 
     try {
-      console.log("dsdf")
       const AdminData = await AdminModel.login(req.body.email, req.body.password);
-      console.log(AdminData)
+     
    if(!AdminData){
     throw new Error("not found as admin")
    }
@@ -37,6 +37,29 @@ class Admin {
         message: "error adding user",
       });
     }
-  };
+  };  static deletePost = async (req, res)=>{
+    try {
+      await PostModel.findByIdAndDelete(req.params.id )
+      res.send("deleted")
+    } catch (error) {
+      res.status(400).send({
+        apiStatus: false,
+        error: error.message,
+        message: "error delete post",
+      });
+    }
+  }
+  static sendEmail = async (req,res)=>{
+    try {
+     await Email({userEmail: req.body.userEmail ,subject:req.body.subject , contant:req.body.contant})
+      res.send("Done")
+    } catch (error) {
+      res.status(400).send({
+        apiStatus: false,
+        error: error.message,
+        message: "error sending email",
+      });
+    }
+  }
 }
 module.exports = Admin;
