@@ -82,7 +82,7 @@ class User extends Image{
       }
       res.status(200).send({
         token: token,
-        userRole: userData.userRole,
+        userData: userData,
       });
     } catch (e) {
       res.status(400).send({
