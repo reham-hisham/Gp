@@ -3,6 +3,7 @@ const cloudinaryhelper = require("../../middleware/cloudinary");
 const isImage = require("is-image");
 const otp = require("../../helper/sendOTP");
 const sendEmail = require("../../helper/sendEmail");
+const Follow=require("../../models/followCompanies")
 const cloudinary = require("cloudinary");
 const Image = require( "../common/image.controller" );
 
@@ -91,6 +92,53 @@ class User extends Image{
       });
     }
   };
+  static followCompany=async (req, res)=> {
+    const followerId = req.user._id;
+    const comapanyId = req.params.userId;
+    try {
+      const follow = await Follow.findOne({ followerId });
+  
+      if (follow) {
+        follow.companyId.push(companyId);
+        await follow.save();
+      } else {
+        const newFollow = new Follow({
+          followerId,
+          companyId: [companyId]
+        });
+        await newFollow.save();
+      }
+  
+      res.status(201).send({msg:"modified succ"});
+    } catch (error) {
+      res.status(400).send({
+        apiStatus: false,
+        data: error.message,
+      })    }
+    
+  }
+  static unFollowCompany=async(req,res)=>{
+    const followerId = req.user._id;
+    const comapanyId = req.params.userId; 
+
+  try {
+    const follow = await Follow.findOne({ followerId });
+
+    if (follow) {
+      follow.companyId.pull(comapanyId);
+      await follow.save();
+      res.send({msg:"modified succ"});
+    } else {
+      res.status(404).send({ error: 'Follow model not found' });
+    }
+  } catch (error) {
+    res.status(400).send({
+      apiStatus: false,
+      data: error.message,
+    }) 
+  }
+
+  }
 
 static deleteProfileImage = async (req , res )=>{
  this.deleteImage(req, res)
