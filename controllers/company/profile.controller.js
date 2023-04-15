@@ -86,9 +86,10 @@ class company extends Image{
         console.log(userData.OTP);
         throw new Error("please validate your account first");
       }
+      userData.tokens=token;
       res.status(200).send({
         token: token,
-        userRole: userData.userRole,
+        userRole: userData,
       });
     } catch (e) {
       res.status(400).send({
