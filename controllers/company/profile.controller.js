@@ -86,11 +86,10 @@ class company extends Image{
         console.log(userData.OTP);
         throw new Error("please validate your account first");
       }
-      delete userData.tokens
-      userData.token=token
+      
       res.status(200).send({
         token: token,
-        userRole: userData,
+        userRole: userData.userRole,
       });
     } catch (e) {
       res.status(400).send({

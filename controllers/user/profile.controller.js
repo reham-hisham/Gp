@@ -71,7 +71,6 @@ class User extends Image{
   static login = async (req, res) => {
     try {
       const userData = await userModel.login(req.body.email, req.body.password);
-      console.log(userData)
       if (userData.isBlocked) {
         throw new Error("Blocked ");
       }
@@ -80,9 +79,12 @@ class User extends Image{
         console.log(userData.OTP);
         throw new Error("please validate your account first");
       }
-      res.status(200).send({
-        token: token,
-        userData: userData,
+      
+ res.status(200).send({
+        userObject:{id:userData._id,
+        token : token,
+        name:userData.name,
+        email:userData.email }
       });
     } catch (e) {
       res.status(400).send({
