@@ -13,6 +13,7 @@ class User extends Image{
   static register = async (req, res) => {
     try {
       const userData = new userModel(req.body);
+      userData.minSalary={value:req.body.minSalary}
       await userData.save();
       await this.SendOTP(req, res);
       res.status(200).send();
@@ -96,7 +97,7 @@ static deleteProfileImage = async (req , res )=>{
  this.deleteImage(req, res)
 };
 
-  //error
+
   static getUserData = async (req, res) => {
    req.user.password =null
    req.user.tokens = null
