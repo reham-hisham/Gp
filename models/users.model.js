@@ -36,7 +36,7 @@ const userSchema = mongoose.Schema(
     },
     address: {
       type: String,
-      required: true,
+      required: false,
       max: 200,
     },
     email: {
@@ -74,10 +74,11 @@ const userSchema = mongoose.Schema(
     },
     jobTitles: {
       type: Array,
-      required: true,
+      required: false,
     },
     minSalary: {
-      value: { type: Number, required: true },
+      value: { type: Number,       required: false,
+      },
       currency: String,
     },
     industry: {
