@@ -3,6 +3,7 @@ const cloudinaryhelper = require("../../middleware/cloudinary");
 const isImage = require("is-image");
 const otp = require("../../helper/sendOTP");
 const sendEmail = require("../../helper/sendEmail");
+const Follow=require("../../models/followCompanies")
 const cloudinary = require("cloudinary");
 const Image = require( "../common/image.controller" );
 
@@ -71,7 +72,6 @@ class User extends Image{
   static login = async (req, res) => {
     try {
       const userData = await userModel.login(req.body.email, req.body.password);
-      console.log(userData)
       if (userData.isBlocked) {
         throw new Error("Blocked ");
       }
@@ -80,9 +80,12 @@ class User extends Image{
         console.log(userData.OTP);
         throw new Error("please validate your account first");
       }
-      res.status(200).send({
-        token: token,
-        userRole: userData.userRole,
+      
+ res.status(200).send({
+        userObject:{id:userData._id,
+        token : token,
+        name:userData.name,
+        email:userData.email }
       });
     } catch (e) {
       res.status(400).send({
@@ -92,6 +95,53 @@ class User extends Image{
       });
     }
   };
+  static followCompany=async (req, res)=> {
+    const followerId = req.user._id;
+    const comapanyId = req.params.userId;
+    try {
+      const follow = await Follow.findOne({ followerId });
+  
+      if (follow) {
+        follow.companyId.push(companyId);
+        await follow.save();
+      } else {
+        const newFollow = new Follow({
+          followerId,
+          companyId: [companyId]
+        });
+        await newFollow.save();
+      }
+  
+      res.status(201).send({msg:"modified succ"});
+    } catch (error) {
+      res.status(400).send({
+        apiStatus: false,
+        data: error.message,
+      })    }
+    
+  }
+  static unFollowCompany=async(req,res)=>{
+    const followerId = req.user._id;
+    const comapanyId = req.params.userId; 
+
+  try {
+    const follow = await Follow.findOne({ followerId });
+
+    if (follow) {
+      follow.companyId.pull(comapanyId);
+      await follow.save();
+      res.send({msg:"modified succ"});
+    } else {
+      res.status(404).send({ error: 'Follow model not found' });
+    }
+  } catch (error) {
+    res.status(400).send({
+      apiStatus: false,
+      data: error.message,
+    }) 
+  }
+
+  }
 
 static deleteProfileImage = async (req , res )=>{
  this.deleteImage(req, res)
