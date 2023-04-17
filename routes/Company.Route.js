@@ -21,4 +21,9 @@ router.post(
   );
   router.post('/edit' , companyAuth , companyProfileController.edit)
   router.delete('/delete/post/:id', companyAuth , CompanyPostController.deletePost)
+router.post('/jobpost', companyAuth , jopPostController.create)
+router.delete('/delete/jobpost/:id', companyAuth , jopPostController.deleteJobPost)
+
+
+
  module.exports = router
