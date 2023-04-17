@@ -1,5 +1,7 @@
 const AdminModel = require("../../models/Admin.model");
 const PostModel = require("../../models/post.model")
+const JobPostModel = require("../../models/jopPost.model")
+
 const Email = require('../../helper/sendEmail')
 class Admin {
 
@@ -58,6 +60,18 @@ class Admin {
         apiStatus: false,
         error: error.message,
         message: "error sending email",
+      });
+    }
+  }
+  static deleteJobPost = async (req, res)=>{
+    try {
+      await JobPostModel.findOneAndDelete({_id:req.params.id })
+      res.send("deleted")
+    } catch (error) {
+      res.status(400).send({
+        apiStatus: false,
+        error: error.message,
+        message: "error delete post",
       });
     }
   }
