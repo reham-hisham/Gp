@@ -268,5 +268,23 @@ static deleteProfileImage = async (req , res )=>{
       });
     }
   };
+  
+  static viewAccount = async (req, res) => {
+   
+   try {
+    const account = await userModel.findById(req.params.id)
+    account.password =null
+    account.tokens =[]
+    account.OTP = null
+
+     res.send(account);
+   
+   } catch (error) {
+    res.status(400).send({
+      apiStatus: false,
+      message: error.message,
+    });
+   } 
+  }
 }
 module.exports = User;

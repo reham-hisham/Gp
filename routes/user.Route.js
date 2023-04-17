@@ -9,6 +9,8 @@ const companyUserAuth = require('../middleware/companyUserAuth')
 //router.post("/profile", userController.uploadProfileImage);
 //////////////// user ////////////////////////////////////
 router.post("/register", userController.register); //Done
+router.get("/account/:id", userController.viewAccount); //Done
+
 router.post("/login", userController.login); //DONE
 router.post("/logout",auth, userController.logout);
 router.get("/info",auth, userController.getUserData);//DONE
