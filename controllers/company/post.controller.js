@@ -1,5 +1,5 @@
 const oldposts = require("../../models/oldJops.model");
-
+const followModel = require('../../models/followCompanies')
 const PostModel = require("../../models/post.model");
 const { options } = require("../../routes/user.Route");
 class posts {
@@ -17,19 +17,23 @@ class posts {
       });
     }
   };
+
+  // check realtion and comments 
+  // check time of posts 
+  // check images working or not 
   static getUserPosts= async(req,res)=>{
-    const startingPoint=(req.params.start-1)*10 
-    const userId=req.params.id
-    const lastPostSeen = req.query.lastPostSeen || Date.now();
+    const startingPoint=(req.body.start-1)*10 
+    const lastPostSeen = req.body.lastPostSeen || Date.now();
     let isUpdated
     try{
-    const followObj=await Follow.findById(userId)
-    const posts=await Post.find({user:{$in:followObj.companyId },updatedAt:{ $lt: lastPostSeen }})
-    .populate('user')
+    const followObj=await followModel.findOne({followerId:req.user._id})
+    
+    const posts=await PostModel.find({user:{$in:followObj.companyId },updatedAt:{ $lt: lastPostSeen }})
+    .populate({path :'user' , select : 'name image _id'})
     .sort({ updatedAt: -1 })
     .skip(startingPoint)
     .limit(10)
-    const pp=await Post.find({user:{$in:followObj.companyId },updatedAt:{ $gt: lastPostSeen }}).count()
+    const pp=await PostModel.find({user:{$in:followObj.companyId },updatedAt:{ $gt: lastPostSeen }}).count()
     if(pp>startingPoint)
     isUpdated=false
     else
@@ -43,7 +47,7 @@ class posts {
     catch(err){
       res.status(400).send({
         apiStatus: false,
-        message: error.message,
+        message: err.message,
       });
     }
 
@@ -51,6 +55,7 @@ class posts {
   }
   static addReaction = async (req, res) => {
     try {
+  
       const post = await PostModel.findById(req.params.id);
       post.reactions.push({ user: req.user._id });
       await post.save();

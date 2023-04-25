@@ -7,3 +7,5 @@ const followageSchema = new mongoose.Schema({
     companyId: [{ type: mongoose.Schema.Types.ObjectId, ref: 'company' }],
     followedAt: { type: Date, default: Date.now }
   });
+
+  module.exports= mongoose.model("follow" , followageSchema)

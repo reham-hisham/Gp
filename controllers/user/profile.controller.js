@@ -3,12 +3,11 @@ const cloudinaryhelper = require("../../middleware/cloudinary");
 const isImage = require("is-image");
 const otp = require("../../helper/sendOTP");
 const sendEmail = require("../../helper/sendEmail");
-const Follow=require("../../models/followCompanies")
 const cloudinary = require("cloudinary");
 const Image = require( "../common/image.controller" );
 const companyModel = require( "../../models/company.model" );
 const user = require( "../../models/users.model" );
-
+const followModel = require("../../models/followCompanies")
 // Get instance by resolving ClamScan promise object
 
 // OTP = 0 -> can login
@@ -99,15 +98,15 @@ class User extends Image{
   };
   static followCompany=async (req, res)=> {
     const followerId = req.user._id;
-    const comapanyId = req.params.userId;
+    const companyId = req.params.id;
     try {
-      const follow = await Follow.findOne({ followerId });
+      const follow = await followModel.findById( followerId );
   
       if (follow) {
         follow.companyId.push(companyId);
         await follow.save();
       } else {
-        const newFollow = new Follow({
+        const newFollow = new followModel({
           followerId,
           companyId: [companyId]
         });
