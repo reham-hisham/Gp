@@ -56,10 +56,31 @@ class posts {
   static addReaction = async (req, res) => {
     try {
   
-      const post = await PostModel.findById(req.params.id);
-      post.reactions.push({ user: req.user._id });
+      console.log(req.user._id);
+      console.log(req.params.id);
+    //  const post = await PostModel.findById(req.params.id);
+    //  post.reactions.push({ user: req.user._id });
+    //  await post.save();
+    //  res.send(post);
+  
+   
+  /*  const post=await PostModel.findOneAndUpdate({_id:req.params.id},
+      {$pull: { reactions: {user:req.user._id} },
+      $addToSet:{reactions:{user:req.user._id}}},
+      {runValidators:true,new:true}) */
+      const post=await PostModel.findById(req.params.id)
+      let m= post.reactions.filter((doc)=>doc.user.toString()==req.user._id.toString())
+      console.log(m);
+      if(m>=0)
+      post.reactions.pull({user:req.user._id})
+      else
+      post.reactions.push({user:req.user._id})
+      console.log(post);
+
       await post.save();
-      res.send(post);
+      
+
+    res.send({post})
     } catch (error) {
       res.status(400).send({
         apiStatus: false,

@@ -235,7 +235,6 @@ static deleteProfileImage = async (req , res )=>{
     try {
 
       let user = await userModel.findOne({ email: req.body.email });
-      console.log(user)
       if (req.body.OTP == user.OTP) {
         user.OTP = 0;
       await  user.save();

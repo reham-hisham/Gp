@@ -16,7 +16,6 @@ const CompanyAuth = async (req, res, next) => {
             _id: d_token._id,
             "tokens.token": token,
           })
-          console.log("user",user);
           if(!user){
             throw new Error("not allawed")
           }
@@ -26,7 +25,6 @@ const CompanyAuth = async (req, res, next) => {
         req.user = company;
         req.token = token;
     }
-    console.log(req.user);
 
     next();
   } catch (e) {

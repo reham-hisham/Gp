@@ -64,7 +64,6 @@ class company extends Image{
       if (req.body.OTP == user.OTP) {
         user.OTP = 0;
         user.save();
-        console.log(user);
         res.send({ id: user._id });
       } else {
         throw new Error("Otp not valid ");
