@@ -45,5 +45,6 @@ router.get('/comments/:id', postController.getComments)
 router.get('/post' , auth , postController.getUserPosts)
 router.post('/comment/:id' , companyUserAuth , postController.addComment)
 router.post('/follow/:id' , companyUserAuth , userController.followCompany)
+router.get("/companyPosts/:id" , userController.getCompanyPosts)
 
 module.exports = router;

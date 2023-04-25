@@ -160,5 +160,14 @@ class posts {
       });
     }
   };
+  static getCompanyPosts=async(req,res)=>{
+    PostModel.find({user:req.params.id}).then((data)=>{
+      res.json({data,apiStatus:success})
+    }).catch((error)=>{ res.status(400).send({
+      apiStatus: false,
+      data: error.message,
+      message: "error getting posts",
+    });})
+  }
 }
 module.exports = posts;
