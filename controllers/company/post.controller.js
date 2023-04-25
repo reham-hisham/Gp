@@ -1,5 +1,5 @@
 const oldposts = require("../../models/oldJops.model");
-const followModel = require('../../models/followCompanies')
+const followModel = require("../../models/followCompanies");
 const PostModel = require("../../models/post.model");
 const { options } = require("../../routes/user.Route");
 class posts {
@@ -18,69 +18,58 @@ class posts {
     }
   };
 
-  // check realtion and comments 
-  // check time of posts 
-  // check images working or not 
-  static getUserPosts= async(req,res)=>{
-    const startingPoint=(req.body.start-1)*10 
+  // check realtion and comments
+  // check time of posts
+  // check images working or not
+  static getUserPosts = async (req, res) => {
+    const startingPoint = (req.body.start - 1) * 10;
     const lastPostSeen = req.body.lastPostSeen || Date.now();
-    let isUpdated
-    try{
-    const followObj=await followModel.findOne({followerId:req.user._id})
-    
-    const posts=await PostModel.find({user:{$in:followObj.companyId },updatedAt:{ $lt: lastPostSeen }})
-    .populate({path :'user' , select : 'name image _id'})
-    .sort({ updatedAt: -1 })
-    .skip(startingPoint)
-    .limit(10)
-    const pp=await PostModel.find({user:{$in:followObj.companyId },updatedAt:{ $gt: lastPostSeen }}).count()
-    if(pp>startingPoint)
-    isUpdated=false
-    else
-    isUpdated=true
-    res.json({
-      apiStatus: true,
+    let isUpdated;
+    try {
+      const followObj = await followModel.findOne({ followerId: req.user._id });
+
+      const posts = await PostModel.find({
+        user: { $in: followObj.companyId },
+        updatedAt: { $lt: lastPostSeen },
+      })
+        .populate({ path: "user", select: "name image _id" })
+        .sort({ updatedAt: -1 })
+        .skip(startingPoint)
+        .limit(10);
+      const pp = await PostModel.find({
+        user: { $in: followObj.companyId },
+        updatedAt: { $gt: lastPostSeen },
+      }).count();
+      if (pp > startingPoint) isUpdated = false;
+      else isUpdated = true;
+      res.json({
+        apiStatus: true,
         data: posts,
-        isUpdated:isUpdated
-    })
-    }
-    catch(err){
+        isUpdated: isUpdated,
+      });
+    } catch (err) {
       res.status(400).send({
         apiStatus: false,
         message: err.message,
       });
     }
-
-    
-  }
+  };
   static addReaction = async (req, res) => {
     try {
-  
-      console.log(req.user._id);
-      console.log(req.params.id);
-    //  const post = await PostModel.findById(req.params.id);
-    //  post.reactions.push({ user: req.user._id });
-    //  await post.save();
-    //  res.send(post);
-  
-   
-  /*  const post=await PostModel.findOneAndUpdate({_id:req.params.id},
-      {$pull: { reactions: {user:req.user._id} },
-      $addToSet:{reactions:{user:req.user._id}}},
-      {runValidators:true,new:true}) */
-      const post=await PostModel.findById(req.params.id)
-      let m= post.reactions.filter((doc)=>doc.user.toString()==req.user._id.toString())
-      console.log(m);
-      if(m>=0)
-      post.reactions.pull({user:req.user._id})
+      const post = await PostModel.findById(req.params.id);
+      let m = post.reactions.filter(
+        (doc) => doc.user.toString() == req.user._id.toString()
+      );
+
+      if (m.length <= 0) post.reactions.push({ user: req.user._id });
       else
-      post.reactions.push({user:req.user._id})
-      console.log(post);
+        post.reactions = post.reactions.filter(
+          (doc) => doc.user.toString() != req.user._id.toString()
+        );
 
       await post.save();
-      
 
-    res.send({post})
+      res.send({ post });
     } catch (error) {
       res.status(400).send({
         apiStatus: false,
@@ -92,7 +81,7 @@ class posts {
   static addComment = async (req, res) => {
     try {
       const post = await PostModel.findById(req.params.id);
-      post.comments.push({ user: req.user._id , text: req.body.comment });
+      post.comments.push({ user: req.user._id, text: req.body.comment });
       await post.save();
       res.send(post);
     } catch (error) {
@@ -103,50 +92,22 @@ class posts {
       });
     }
   };
-  static getComments = async (req, res)=>{
+  static getComments = async (req, res) => {
     try {
-        const posts = await PostModel.findById(req.params.id)
+      const posts = await PostModel.findById(req.params.id)
         .populate({
           path: "comments.user",
-          model:'User',
+          model: "User",
           strictPopulate: false,
           select: " name email image",
         })
         .populate({
           path: "comments.user",
-          model:'Company',
+          model: "Company",
 
           strictPopulate: false,
           select: " name email image",
         });
-        res.send(posts)
-    } catch (error) {
-        res.status(400).send({
-            apiStatus: false,
-            data: error.message,
-            message: "error adding like",
-          });
-    }
-  }
-  static getAllReactions = async (req, res) => {
-    try {
-      const posts = await PostModel.findById(req.params.id)
-        .populate({
-          path: "reactions.user",
-         model:'User',
-    
-          strictPopulate: false,
-          select: " name email image",
-        })
-
-.populate({
-            path: "reactions.user",
-           model:'Company',
-      
-            strictPopulate: false,
-            select: " name email image",
-          })
-        
       res.send(posts);
     } catch (error) {
       res.status(400).send({
@@ -156,10 +117,41 @@ class posts {
       });
     }
   };
-  static deletePost = async (req, res)=>{
+  static getAllReactions = async (req, res) => {
     try {
-      await PostModel.findOneAndDelete({_id:req.params.id , user:req.user._id})
-      res.send("deleted")
+      const posts = await PostModel.findById(req.params.id)
+        .populate({
+          path: "reactions.user",
+          model: "User",
+
+          strictPopulate: false,
+          select: " name email image",
+        })
+
+        .populate({
+          path: "reactions.user",
+          model: "Company",
+
+          strictPopulate: false,
+          select: " name email image",
+        });
+
+      res.send(posts);
+    } catch (error) {
+      res.status(400).send({
+        apiStatus: false,
+        data: error.message,
+        message: "error adding like",
+      });
+    }
+  };
+  static deletePost = async (req, res) => {
+    try {
+      await PostModel.findOneAndDelete({
+        _id: req.params.id,
+        user: req.user._id,
+      });
+      res.send("deleted");
     } catch (error) {
       res.status(400).send({
         apiStatus: false,
@@ -167,6 +159,6 @@ class posts {
         message: "error delete post",
       });
     }
-  }
+  };
 }
 module.exports = posts;

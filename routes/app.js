@@ -9,7 +9,10 @@ app.use(express.json());
 const adminRoute = require('./admin.Route')
 const userRoute = require('./user.Route')
 const CompanyRoute = require('./Company.Route.js')
+const model = require ('./model.Route')
 app.use("/admin", adminRoute)
+app.use("/model", model)
+
 app.use("/user", userRoute)
 app.use("/company", CompanyRoute)
 module.exports = app;
