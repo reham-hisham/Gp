@@ -119,6 +119,7 @@ static deleteProfileImage = async (req , res)=>{
         about: req.user.about,
         country: req.user.country,
         image: req.user.image,
+        address: req.user.address,
         city: req.user.city,
         numberOfemployee: req.user.numberOfemployee,
         industry :req.user.industry
@@ -133,6 +134,7 @@ static deleteProfileImage = async (req , res)=>{
       apiStatus: true,
       data: {
         name: company.name,
+        address : company.address,
         number: company.number,
         email: company.email,
         about: company.about,
