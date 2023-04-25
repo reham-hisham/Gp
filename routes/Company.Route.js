@@ -12,6 +12,8 @@ router.post('/login',companyProfileController.login)
 router.post("/post",companyAuth, CompanyPostController.create);
 router.post("/logout",companyAuth, companyProfileController.logout);
 router.get("/profile", companyAuth , companyProfileController.getCompanyData)
+router.get("/company/:id" , companyProfileController.getCompanyDataById)
+
 router.post(
     "/companyImage",
     companyAuth,

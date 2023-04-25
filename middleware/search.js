@@ -20,6 +20,15 @@ const search=async (req,res)=>{
     
     ]
   });
+  if(users){
+    resulSearch.push({users: users})
+    
+  }
+  if(companies){
+    resulSearch.push({companies: companies})
+    
+  }
+
 res.status(200).send(resulSearch)
 }catch(err){
     res.status(400).send({

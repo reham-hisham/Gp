@@ -6,6 +6,8 @@ const sendEmail = require("../../helper/sendEmail");
 const Follow=require("../../models/followCompanies")
 const cloudinary = require("cloudinary");
 const Image = require( "../common/image.controller" );
+const companyModel = require( "../../models/company.model" );
+const user = require( "../../models/users.model" );
 
 // Get instance by resolving ClamScan promise object
 
@@ -286,5 +288,42 @@ static deleteProfileImage = async (req , res )=>{
     });
    } 
   }
+  static search=async (req,res)=>{
+    try{
+    const query = req.body.search;
+    let resulSearch=[]
+  const regex = new RegExp(query, 'i');
+  const users = await userModel.find({
+    $or: [
+      { name: { $regex: regex } },
+      { title: { $regex: regex } },
+      { jobTitles: { $regex: regex } },
+      { industry: { $regex: regex } }
+    ]
+  });
+  const companies= await companyModel.find({
+    $or: [
+      { name: { $regex: regex } },
+      { industry: { $regex: regex } }
+    
+    ]
+  });
+  if(users){
+    resulSearch.push({users: users})
+    
+  }
+  if(companies){
+    resulSearch.push({companies: companies})
+    
+  }
+
+res.status(200).send({companies , users})
+}catch(err){
+    res.status(400).send({
+        apiStatus: false,
+        data: err.message,
+      });
+  }
+}
 }
 module.exports = User;

@@ -10,6 +10,7 @@ const companyUserAuth = require('../middleware/companyUserAuth')
 //////////////// user ////////////////////////////////////
 router.post("/register", userController.register); //Done
 router.get("/account/:id", userController.viewAccount); //Done
+router.post("/search", userController.search); //DONE
 
 router.post("/login", userController.login); //DONE
 router.post("/logout",auth, userController.logout);

@@ -68,6 +68,8 @@ numberOfemployee:{
     type:Number
 },
     isBlocked: { type: Boolean, default: false },
+    confirmed: { type: Boolean, default: false },
+
     tokens: [
       {
         token: {

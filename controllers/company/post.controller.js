@@ -17,6 +17,38 @@ class posts {
       });
     }
   };
+  static getUserPosts= async(req,res)=>{
+    const startingPoint=(req.params.start-1)*10 
+    const userId=req.params.id
+    const lastPostSeen = req.query.lastPostSeen || Date.now();
+    let isUpdated
+    try{
+    const followObj=await Follow.findById(userId)
+    const posts=await Post.find({user:{$in:followObj.companyId },updatedAt:{ $lt: lastPostSeen }})
+    .populate('user')
+    .sort({ updatedAt: -1 })
+    .skip(startingPoint)
+    .limit(10)
+    const pp=await Post.find({user:{$in:followObj.companyId },updatedAt:{ $gt: lastPostSeen }}).count()
+    if(pp>startingPoint)
+    isUpdated=false
+    else
+    isUpdated=true
+    res.json({
+      apiStatus: true,
+        data: posts,
+        isUpdated:isUpdated
+    })
+    }
+    catch(err){
+      res.status(400).send({
+        apiStatus: false,
+        message: error.message,
+      });
+    }
+
+    
+  }
   static addReaction = async (req, res) => {
     try {
       const post = await PostModel.findById(req.params.id);

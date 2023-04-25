@@ -15,7 +15,11 @@ class company extends Image{
       CompanyData.OTP = -1;
 
       await CompanyData.save();
-
+      await sendEmail({
+        userEmail: req.body.email,
+        subject: "conferm your company details ",
+        contant: ` Plaese send us any doc that conferm u are a real company `,
+      });
       await this.SendOTP(req, res);
       res.status(200).send();
     } catch (e) {
@@ -118,11 +122,29 @@ static deleteProfileImage = async (req , res)=>{
         image: req.user.image,
         city: req.user.city,
         numberOfemployee: req.user.numberOfemployee,
+        industry :req.user.industry
+
       },
       message: "data featched",
     });
   };
-
+  static getCompanyDataById = async (req, res) => {
+    const company = await CompanyModel.findById(req.params.id)
+    res.send({
+      apiStatus: true,
+      data: {
+        name: company.name,
+        number: company.number,
+        email: company.email,
+        about: company.about,
+        country: company.country,
+        image: company.image,
+        city: company.city,
+        numberOfemployee: company.numberOfemployee,
+        industry :company.industry
+      }
+    });
+  };
   static logout = async (req, res) => {
     try {
       req.user.tokens = req.user.tokens.filter((tok) => req.token != tok.token);
