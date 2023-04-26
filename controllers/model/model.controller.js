@@ -38,12 +38,32 @@ class posts {
   }
 
  
-
+  static calculateAge = async(birthdate)=> {
+    const now = new Date();
+    const birth = new Date(birthdate);
+    let age = now.getFullYear() - birth.getFullYear();
+    const monthDiff = now.getMonth() - birth.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < birth.getDate())) {
+      age--;
+    }
+    
+    return age;
+  }
   static getCvs = async (req, res) => {
     try {
           const posts=await jobPostModel.findById(req.params.id)
-          console.log(posts);
-    const cvs = await user.find({country : posts.Country , city : posts.City , jobType : posts.jobType  })
+          let cvs = await user.find({country : posts.Country , city : posts.City , jobType : posts.jobType  })
+
+          if(posts.maxAge){
+          cvs= cvs.filter(async (e)=>{
+            await this.calculateAge(e.birthdate) <= posts.maxAge
+          })
+
+
+          }
+ cvs.tokens =[]
+ cvs.password =null 
     res.send(cvs)
     } catch (error) {
         res.status(400).send(error.message)
