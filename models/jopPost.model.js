@@ -73,7 +73,7 @@ const jobPostSchema = new Schema({
   hiringOrganization: {
     type: mongoose.Schema.Types.ObjectId,
    
-    ref: "company",
+    ref: "Company",
   },
   workingType: {
     enum: ["On-site", "Remote", "Hybrid"],

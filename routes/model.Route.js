@@ -11,5 +11,5 @@ const companyUserAuth = require('../middleware/companyUserAuth')
 //////////////// user ////////////////////////////////////
 
 router.get('/jobpost'  , postController.jobPost)
-
+router.get('/cv/:id' , postController.getCvs )
 module.exports = router;

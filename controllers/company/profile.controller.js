@@ -5,7 +5,7 @@ const cloudinaryhelper = require("../../middleware/cloudinary");
 const otp = require("../../helper/sendOTP");
 const sendEmail = require("../../helper/sendEmail");
 const oldposts = require("../../models/oldJops.model");
-const jopPost = require("../../models/jopPost.model");
+const followModel = require("../../models/followCompanies");
 const Image = require('../common/image.controller')
 class company extends Image{
   static register = async (req, res) => {
@@ -130,6 +130,16 @@ static deleteProfileImage = async (req , res)=>{
   };
   static getCompanyDataById = async (req, res) => {
     const company = await CompanyModel.findById(req.params.id)
+let isFollowed = false
+    if(req.user){
+      let follow = await followModel.findOne({followerId: req.user._id})
+      follow.companyId.forEach((e)=>{
+     
+        if(e.toString() == company._id.toString()){
+          isFollowed = true
+        }
+      })
+    }
     res.send({
       apiStatus: true,
       data: {
@@ -142,7 +152,8 @@ static deleteProfileImage = async (req , res)=>{
         image: company.image,
         city: company.city,
         numberOfemployee: company.numberOfemployee,
-        industry :company.industry
+        industry :company.industry,
+        isFollowed :isFollowed
       }
     });
   };

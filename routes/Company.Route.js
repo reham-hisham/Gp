@@ -1,5 +1,7 @@
 const router = require('express').Router()
 const post = require('../models/jopPost.model')
+const notstrictauth = require('../middleware/notstrictauth')
+
 const multer = require("multer");
 const upload = multer({ dest: "images/" });
 const jopPostController = require('../controllers/company/jobpost.controller')
@@ -12,7 +14,7 @@ router.post('/login',companyProfileController.login)
 router.post("/post",companyAuth, CompanyPostController.create);
 router.post("/logout",companyAuth, companyProfileController.logout);
 router.get("/profile", companyAuth , companyProfileController.getCompanyData)
-router.get("/company/:id" , companyProfileController.getCompanyDataById)
+router.get("/company/:id" ,notstrictauth, companyProfileController.getCompanyDataById)
 
 router.post(
     "/companyImage",
