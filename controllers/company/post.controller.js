@@ -47,7 +47,7 @@ class posts {
         updatedAt: { $lt: lastPostSeen },
       })
       .populate({
-        path: "commentsUsers commentsCompany",
+        path: "commentsUsers commentsCompany user",
         select: " name email image",
       })
         .sort({ updatedAt: -1 })
@@ -129,6 +129,7 @@ class posts {
   static getAllReactions = async (req, res) => {
     try {
       const posts = await PostModel.findById(req.params.id)
+      
         .populate({
           path: "reactions.user",
           model: "User",
