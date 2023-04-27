@@ -46,7 +46,10 @@ class posts {
         user: { $in: followObj.companyId },
         updatedAt: { $lt: lastPostSeen },
       })
-        .populate({ path: "user", select: "name image _id" })
+      .populate({
+        path: "commentsUsers commentsCompany",
+        select: " name email image",
+      })
         .sort({ updatedAt: -1 })
         .skip(startingPoint)
         .limit(10);
@@ -110,18 +113,10 @@ class posts {
     try {
       const posts = await PostModel.findById(req.params.id)
         .populate({
-          path: "comments.user",
-          model: "User",
-          strictPopulate: false,
+          path: "commentsUsers commentsCompany",
           select: " name email image",
         })
-        .populate({
-          path: "comments.user",
-          model: "Company",
-
-          strictPopulate: false,
-          select: " name email image",
-        });
+        
       res.send(posts);
     } catch (error) {
       res.status(400).send({
