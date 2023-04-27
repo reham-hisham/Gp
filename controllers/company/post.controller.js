@@ -27,7 +27,7 @@ class posts {
       res.status(400).send({
         apiStatus: false,
         data: error.message,
-        message: "error adding user",
+        message: "error adding post",
       });
     }
   };
@@ -47,12 +47,16 @@ class posts {
         updatedAt: { $lt: lastPostSeen },
       })
       .populate({
-        path: "commentsUsers commentsCompany user",
+        path: "user",
+    
         select: " name email image",
       })
         .sort({ updatedAt: -1 })
         .skip(startingPoint)
         .limit(10);
+       
+
+        
       const pp = await PostModel.find({
         user: { $in: followObj.companyId },
         updatedAt: { $gt: lastPostSeen },
@@ -98,7 +102,7 @@ class posts {
   static addComment = async (req, res) => {
     try {
       const post = await PostModel.findById(req.params.id);
-      post.comments.push({ user: req.user._id, text: req.body.comment });
+      post.comments.push({ userId: req.user._id, text: req.body.comment , name: req.user.name , email: req.user.email , image: req.user.image });
       await post.save();
       res.send(post);
     } catch (error) {
