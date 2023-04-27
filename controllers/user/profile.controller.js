@@ -101,11 +101,13 @@ class User extends Image {
   static ultimateFollow = async (req,res)=>{
     const userId = req.user._id;
     const compId = req.params.id;
+    let isFollowed=false
 
     try {
       let followObject = await followModel.findOne({followerId:userId});
       if(!followObject){
         followObject=await followModel.create({followerId:userId,companyId:compId})
+        isFollowed=true;
       }else if(followObject){
         let isFound =false
         followObject.companyId.forEach((e)=>{
@@ -115,12 +117,15 @@ class User extends Image {
           }
         })
         
-        if (!isFound) followObject.companyId.push(compId);
+        if (!isFound){ followObject.companyId.push(compId);
+        isFollowed=true
+        }
         else
         {  let companies = []
           followObject.companyId.forEach(element => {
             if(element.toString() != compId.toString()){
               companies.push(element)
+              
             }
           });
           followObject.companyId = companies}
@@ -128,7 +133,7 @@ class User extends Image {
       await followObject.save();
 
 
-      res.send({ followObject });
+      res.send({ followObject,isFollowed });
     } catch (error) {
       res.status(400).send({
         apiStatus: false,
