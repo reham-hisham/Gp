@@ -2,11 +2,25 @@ const oldposts = require("../../models/oldJops.model");
 const followModel = require("../../models/followCompanies");
 const PostModel = require("../../models/post.model");
 const { options } = require("../../routes/user.Route");
+const isImage = require("is-image");
+const cloudinaryhelper = require("../../middleware/cloudinary");
+
 class posts {
   static create = async (req, res) => {
     try {
+
       const post = await new PostModel(req.body);
       post.user = req.user._id;
+      if (!isImage(req.file.originalname)) {
+        throw new Error("only images allowed");
+      }
+      
+      const uploadedData = await cloudinaryhelper({
+        path: req.file.path,
+        folder: post._id,
+      });
+
+      post.image = uploadedData.secure_url;
       await post.save();
       res.status(200).send(post);
     } catch (error) {

@@ -60,7 +60,6 @@ class User extends Image {
       });
 
       user.image = uploadedData.secure_url;
-      console.log(user.image);
       await user.save();
 
       res.send();
