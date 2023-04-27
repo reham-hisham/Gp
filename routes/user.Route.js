@@ -45,7 +45,7 @@ router.get('/reactions/:id', postController.getAllReactions)
 router.get('/comments/:id', postController.getComments)
 router.post('/post' , auth , postController.getUserPosts)
 router.post('/comment/:id' , companyUserAuth , postController.addComment)
-router.post('/follow/:id' , companyUserAuth , userController.followCompany)
+router.post('/follow/:id' , companyUserAuth , userController.ultimateFollow)
 router.get("/companyPosts/:id" , userController.getCompanyPosts)
 
 module.exports = router;

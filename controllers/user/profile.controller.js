@@ -98,31 +98,44 @@ class User extends Image {
       });
     }
   };
-  static followCompany = async (req, res) => {
-    const followerId = req.user._id;
-    const companyId = req.params.id;
+  static ultimateFollow = async (req,res)=>{
+    const userId = req.user._id;
+    const compId = req.params.id;
+
     try {
-      const follow = await followModel.findById(followerId);
-
-      if (follow) {
-        follow.companyId.push(companyId);
-        await follow.save();
-      } else {
-        const newFollow = new followModel({
-          followerId,
-          companyId: [companyId]
-        });
-        await newFollow.save();
+      let followObject = await followModel.findOne({followerId:userId});
+      if(!followObject){
+        followObject=await followModel.create({followerId:userId,companyId:compId})
+      }else if(followObject){
+        let isFound =false
+        followObject.companyId.forEach((e)=>{
+          if(e.toString() == compId.toString()){
+            console.log("we erach here")
+            isFound = true
+          }
+        })
+        
+        if (!isFound) followObject.companyId.push(compId);
+        else
+        {  let companies = []
+          followObject.companyId.forEach(element => {
+            if(element.toString() != compId.toString()){
+              companies.push(element)
+            }
+          });
+          followObject.companyId = companies}
       }
+      await followObject.save();
 
-      res.status(201).send({ msg: "modified succ" });
+
+      res.send({ followObject });
     } catch (error) {
       res.status(400).send({
         apiStatus: false,
         data: error.message,
-      })
+        message: "error adding follow",
+      });
     }
-
   }
   static unFollowCompany = async (req, res) => {
     const followerId = req.user._id;
