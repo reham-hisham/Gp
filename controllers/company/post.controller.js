@@ -189,15 +189,16 @@ class posts {
     }
   };
   static getCompanyPosts = async (req, res) => {
+    const lastPostSeen = req.body.lastPostSeen || Date.now();
     try {
-      const posts = await PostModel.find()
+      const posts = await PostModel.find({ userId:req.user._id,createdAt: { $lt: lastPostSeen }})
           .populate({
             path: "user",
 
             select: " name email image",
           })
-          .sort({ updatedAt: -1 })
-          .skip(req.body.start)
+          .sort({ createdAt: -1 })
+          
           .limit(10);
         console.log(posts)
       if (req.user) {

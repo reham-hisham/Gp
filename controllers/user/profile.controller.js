@@ -344,18 +344,6 @@ class User extends Image {
       });
     }
   }
-  static getCompanyPosts = async (req, res) => {
-    postModel.find({ user: req.params.id }).then((data) => {
-      if (!data)
-      return res.status(200).json({ msg: "No Posts Found" })
-    res.status(200).json({data})
-    }).catch((error) => {
-      res.status(400).send({
-        apiStatus: false,
-        data: error.message,
-        message: "error getting posts",
-      });
-    })
-  }
+  
 }
 module.exports = User;
