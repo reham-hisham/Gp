@@ -30,7 +30,7 @@ const commentSchema = new Schema({
   },
   image:String
 
-});
+},{timestamps:true});
 
 const postSchema = new Schema({
   isLiked:{
