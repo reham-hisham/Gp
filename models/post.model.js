@@ -12,6 +12,7 @@ const reactionSchema = new Schema({
 });
 
 const commentSchema = new Schema({
+ 
   text: {
     type: String,
     required: true
@@ -29,9 +30,12 @@ const commentSchema = new Schema({
   },
   image:String
 
-});
+},{timestamps:true});
 
 const postSchema = new Schema({
+  isLiked:{
+    type:Boolean
+  },
   text: {
     type: String,
     required: true

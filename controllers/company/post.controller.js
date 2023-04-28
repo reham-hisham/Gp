@@ -43,16 +43,28 @@ class posts {
 
       const posts = await PostModel.find({
         user: { $in: followObj.companyId },
-        updatedAt: { $lt: lastPostSeen },
+        createdAt: { $lt: lastPostSeen },
       })
-        .populate({
-          path: "user",
-
-          select: " name email image",
-        })
-        .sort({ updatedAt: -1 })
-        .skip(startingPoint)
+      .populate({
+        path: "user",
+    
+        select: " name email image",
+      })
+        .sort({ createdAt: -1 })
         .limit(10);
+
+      posts.forEach(post => {
+        post.reactions.forEach((reaction)=>{
+          if(req.user._id.toString()==reaction.user.toString())
+          {
+            post.isLiked=true
+            
+          }else{
+            post.isLiked=false
+          }
+        })
+      });
+       
 
       const pp = await PostModel.find({
         user: { $in: followObj.companyId },
@@ -87,7 +99,7 @@ class posts {
 
       await post.save();
 
-      res.send({ post });
+      res.send(post.reactions);
     } catch (error) {
       res.status(400).send({
         apiStatus: false,
