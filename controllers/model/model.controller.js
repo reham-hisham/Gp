@@ -14,6 +14,9 @@ function getAge(dateString) {
     }
     return age;
 }
+const axios = require('axios');
+
+
 class posts {
  
   static jobPost= async(req,res)=>{
@@ -22,7 +25,16 @@ class posts {
     
     
     const posts=await jobPostModel.find().populate({path:'hiringOrganization' , select: 'industry'})
- 
+    axios.post('http://127.0.0.1:8000/example ', {
+      description: posts[1].description
+     
+    })
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
    
     res.json({
       apiStatus: true,
