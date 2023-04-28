@@ -44,15 +44,14 @@ class posts {
 
       const posts = await PostModel.find({
         user: { $in: followObj.companyId },
-        updatedAt: { $lt: lastPostSeen },
+        createdAt: { $lt: lastPostSeen },
       })
       .populate({
         path: "user",
     
         select: " name email image",
       })
-        .sort({ updatedAt: -1 })
-        .skip(startingPoint)
+        .sort({ createdAt: -1 })
         .limit(10);
        
 
