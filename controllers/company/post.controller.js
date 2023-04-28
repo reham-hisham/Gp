@@ -53,18 +53,20 @@ class posts {
       })
         .sort({ createdAt: -1 })
         .limit(10);
+
       posts.forEach(post => {
         post.reactions.forEach((reaction)=>{
-          if(req.user._id===reaction.user)
+          if(req.user._id.toString()==reaction.user.toString())
           {
             post.isLiked=true
             
+          }else{
+            post.isLiked=false
           }
         })
       });
        
 
-        
       const pp = await PostModel.find({
         user: { $in: followObj.companyId },
         updatedAt: { $gt: lastPostSeen },
@@ -98,7 +100,7 @@ class posts {
 
       await post.save();
 
-      res.send({ post });
+      res.send(post.reactions);
     } catch (error) {
       res.status(400).send({
         apiStatus: false,
