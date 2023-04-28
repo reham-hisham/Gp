@@ -53,6 +53,15 @@ class posts {
       })
         .sort({ createdAt: -1 })
         .limit(10);
+      posts.forEach(post => {
+        post.reactions.forEach((reaction)=>{
+          if(req.user._id===reaction.user)
+          {
+            post.isLiked=true
+            
+          }
+        })
+      });
        
 
         
