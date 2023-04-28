@@ -2,6 +2,7 @@ const oldposts = require("../../models/oldJops.model");
 const followModel = require('../../models/followCompanies')
 const jobPostModel = require("../../models/jopPost.model");
 const { options } = require("../../routes/user.Route");
+const industries = require('industries');
 const user = require( "../../models/users.model" );
 function getAge(dateString) {
     var today = new Date();
@@ -52,8 +53,18 @@ class posts {
   }
   static getCvs = async (req, res) => {
     try {
+      const allIndustries = industries
+console.log(allIndustries);
+let cvs
           const posts=await jobPostModel.findById(req.params.id)
-          let cvs = await user.find({country : posts.Country , city : posts.City , jobType : posts.jobType  })
+          if(posts.workingType= "Remote"){
+          cvs  = await user.find({ jobType : posts.jobType  })
+
+          }
+          else{
+                     cvs = await user.find({country : posts.Country , city : posts.City , jobType : posts.jobType  })
+
+          }
 
           if(posts.maxAge){
           cvs= cvs.filter(async (e)=>{

@@ -8,13 +8,12 @@ const cloudinaryhelper = require("../../middleware/cloudinary");
 class posts {
   static create = async (req, res) => {
     try {
-
       const post = await new PostModel(req.body);
       post.user = req.user._id;
       if (!isImage(req.file.originalname)) {
         throw new Error("only images allowed");
       }
-      
+
       const uploadedData = await cloudinaryhelper({
         path: req.file.path,
         folder: post._id,
@@ -46,17 +45,15 @@ class posts {
         user: { $in: followObj.companyId },
         updatedAt: { $lt: lastPostSeen },
       })
-      .populate({
-        path: "user",
-    
-        select: " name email image",
-      })
+        .populate({
+          path: "user",
+
+          select: " name email image",
+        })
         .sort({ updatedAt: -1 })
         .skip(startingPoint)
         .limit(10);
-       
 
-        
       const pp = await PostModel.find({
         user: { $in: followObj.companyId },
         updatedAt: { $gt: lastPostSeen },
@@ -102,7 +99,13 @@ class posts {
   static addComment = async (req, res) => {
     try {
       const post = await PostModel.findById(req.params.id);
-      post.comments.push({ userId: req.user._id, text: req.body.comment , name: req.user.name , email: req.user.email , image: req.user.image });
+      post.comments.push({
+        userId: req.user._id,
+        text: req.body.comment,
+        name: req.user.name,
+        email: req.user.email,
+        image: req.user.image,
+      });
       await post.save();
       res.send(post);
     } catch (error) {
@@ -115,12 +118,11 @@ class posts {
   };
   static getComments = async (req, res) => {
     try {
-      const posts = await PostModel.findById(req.params.id)
-        .populate({
-          path: "commentsUsers commentsCompany",
-          select: " name email image",
-        })
-        
+      const posts = await PostModel.findById(req.params.id).populate({
+        path: "commentsUsers commentsCompany",
+        select: " name email image",
+      });
+
       res.send(posts);
     } catch (error) {
       res.status(400).send({
@@ -133,7 +135,7 @@ class posts {
   static getAllReactions = async (req, res) => {
     try {
       const posts = await PostModel.findById(req.params.id)
-      
+
         .populate({
           path: "reactions.user",
           model: "User",
@@ -174,14 +176,43 @@ class posts {
       });
     }
   };
-  static getCompanyPosts=async(req,res)=>{
-    PostModel.find({user:req.params.id}).then((data)=>{
-      res.json({data,apiStatus:success})
-    }).catch((error)=>{ res.status(400).send({
-      apiStatus: false,
-      data: error.message,
-      message: "error getting posts",
-    });})
-  }
+  static getCompanyPosts = async (req, res) => {
+    try {
+      const posts = await PostModel.find()
+          .populate({
+            path: "user",
+
+            select: " name email image",
+          })
+          .sort({ updatedAt: -1 })
+          .skip(req.body.start)
+          .limit(10);
+        console.log(posts)
+      if (req.user) {
+        posts.forEach((element) => {
+          element.reactions.forEach((reaction) => {
+            if (reaction.user.toString() == req.user._id.toString()) {
+              element.isLiked = true;
+            }
+          });
+        });
+      }else{
+        posts.forEach((element) => {
+          
+              element.isLiked = false;
+          
+          
+        });
+      }
+
+      res.send(posts);
+    } catch (error) {
+      res.status(400).send({
+        apiStatus: false,
+        data: error.message,
+        message: "error getting posts",
+      });
+    }
+  };
 }
 module.exports = posts;

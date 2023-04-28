@@ -107,10 +107,8 @@ const userSchema = mongoose.Schema(
       enum: [
         "Full Time",
         "Part Time",
-        "Freelance",
         "intership",
-        "Remotly",
-        "volunteering",
+        "other"
       ],
     },
     currentEducationalLevel: {

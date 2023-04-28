@@ -45,7 +45,8 @@ const postSchema = new Schema({
     required: true
   },
   reactions: [reactionSchema],
-  comments: [commentSchema]
+  comments: [commentSchema],
+  isLiked : Boolean
 }, {
   timestamps: true
 });
