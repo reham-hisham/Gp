@@ -199,7 +199,6 @@ class posts {
           .sort({ updatedAt: -1 })
           .skip(req.body.start)
           .limit(10);
-        console.log(posts)
       if (req.user) {
         posts.forEach((element) => {
           element.reactions.forEach((reaction) => {

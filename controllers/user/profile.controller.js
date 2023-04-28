@@ -10,7 +10,7 @@ const user = require("../../models/users.model");
 const followModel = require("../../models/followCompanies")
 const postModel = require('../../models/post.model')
 // Get instance by resolving ClamScan promise object
-
+const { Country, State, City } = require("country-state-city");
 // OTP = 0 -> can login
 class User extends Image {
   static register = async (req, res) => {
@@ -226,7 +226,39 @@ class User extends Image {
       });
     }
   };
+  static getAllCountrisInWorld = async (req, res) => {
+    try {
+      let country = Country.getAllCountries();
+      let countries = [];
+      country.forEach((element) => {
+        countries.push(element.name);
+      });
+      res.send(countries);
+    } catch (error) {
+      res.status(400).send(e.message);
+    }
+  };
+  static getcities = async (req, res) => {
+    try {
+      let CountryReq = Country.getAllCountries().filter(
+        (e) => e.name == req.body.country
+      );
 
+
+      let states = State.getStatesOfCountry(CountryReq[0].isoCode);
+let cities =[]
+      states.forEach((state) => {
+       
+          cities.push(  state.name.replace(" Governorate", ""))
+        
+      });
+     
+
+      res.status(201).send(cities);
+    } catch (e) {
+      res.status(400).send(e.message);
+    }
+  };
   static SendOTP = async (req, res) => {
     try {
       let user = await userModel.findOne({ email: req.body.email });

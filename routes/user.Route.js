@@ -47,5 +47,7 @@ router.post('/post' , auth , postController.getUserPosts)
 router.post('/comment/:id' , companyUserAuth , postController.addComment)
 router.post('/follow/:id' , companyUserAuth , userController.ultimateFollow)
 router.post("/companyPosts/:id" ,notstrictauth, postController.getCompanyPosts)
+router.get('/country',  userController.getAllCountrisInWorld)
+router.post('/city',  userController.getcities)
 
 module.exports = router;
