@@ -40,7 +40,6 @@ const CompanySchema = mongoose.Schema(
     },
     address: {
       type: String,
-      required: true,
       max: 200,
     },
     email: {
