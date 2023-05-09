@@ -90,10 +90,12 @@ class company extends Image{
         throw new Error("please validate your account first");
       }
       
-      res.status(200).send({
+      res.status(200).send({ userObject: {
+        id: userData._id,
         token: token,
-        userRole: userData.userRole,
-      });
+        name: userData.name,
+        email: userData.email
+      }});
     } catch (e) {
       res.status(400).send({
         apiStatus: false,

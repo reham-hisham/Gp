@@ -25,15 +25,20 @@ class posts {
     
     
     const posts=await jobPostModel.find().populate({path:'hiringOrganization' , select: 'industry'})
-   let data = await axios.post('http://127.0.0.1:8000/example ', {
+    axios.post('http://127.0.0.1:8000/example ', {
       description: posts
      
     })
-   
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
    
     res.json({
-
-        data: data    })
+      apiStatus: true,
+        data: posts    })
     }
     catch(err){
       res.status(400).send({
