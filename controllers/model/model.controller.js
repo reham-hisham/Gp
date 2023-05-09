@@ -34,7 +34,7 @@ class posts {
     
    
       headers: {'Content-Type' : 'application/json'},
-   
+  })
     res.json({
 
         data: data    })
