@@ -43,7 +43,7 @@ router.post("/resetPassword/:id",userController.ResetPassword);//DONE
 router.post('/reaction/:id' , companyUserAuth , postController.addReaction)
 router.get('/reactions/:id', postController.getAllReactions)
 router.get('/comments/:id', postController.getComments)
-router.post('/post' , auth , postController.getUserPosts)
+router.post('/post' , companyUserAuth , postController.getUserPosts)
 router.post('/comment/:id' , companyUserAuth , postController.addComment)
 router.post('/follow/:id' , companyUserAuth , userController.ultimateFollow)
 router.post("/companyPosts/:id" ,notstrictauth, postController.getCompanyPosts)
