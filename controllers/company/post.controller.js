@@ -191,8 +191,8 @@ class posts {
   static getCompanyPosts = async (req, res) => {
     const lastPostSeen = req.body.lastPostSeen || Date.now();
     try {
-      
-      const posts = await PostModel.find({ userId:req.params.id,createdAt: { $lt: lastPostSeen }})
+      console.log("f")
+      const posts = await PostModel.find({ user:req.params.id,createdAt: { $lt: lastPostSeen }})
           .populate({
             path: "user",
 
