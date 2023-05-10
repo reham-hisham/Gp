@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/users.model");
+const Company = require('../models/company.model');
+
 const auth = async (req, res, next) => {
   try {
     const token = req.header("Authorization").replace("Bearer ", "");
@@ -14,7 +16,17 @@ const auth = async (req, res, next) => {
   req.user = user;
     req.token = token;
     }
-   
+   if(!user){
+    
+    const company = await Company.findOne({
+      _id: d_token._id,
+      "tokens.token": token,
+    });
+   }
+   if(company){
+    req.user = user;
+    req.token = token;
+   }
     next();
     }
   
