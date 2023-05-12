@@ -360,15 +360,27 @@ let cities =[]
         ]
       });
       if (users) {
-        resulSearch.push({ users: users })
+        let user={}
+        users.forEach(element => {
+              user.data = element
+                  user.type ="user"
 
+        
+        });
+        resulSearch.push({user: user})
       }
       if (companies) {
-        resulSearch.push({ companies: companies })
-
+        let company ={}
+        companies.forEach(element => {
+          company = element
+      
+    
+    });
+    company.type ="company"
+    resulSearch.push({company: company})
       }
-
-      res.status(200).send({ companies, users })
+console.log(resulSearch)
+      res.status(200).send(resulSearch)
     } catch (err) {
       res.status(400).send({
         apiStatus: false,

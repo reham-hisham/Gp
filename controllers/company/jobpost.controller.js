@@ -1,13 +1,15 @@
 const oldposts = require("../../models/oldJops.model");
 
 const jobPostModel = require("../../models/jopPost.model");
+const model = require("../model/model.controller")
 class posts {
   static create = async (req, res) => {
     try {
+      console.log(req.body.industry)
       const post = await jobPostModel.create(req.body);
       post.hiringOrganization = req.user._id;
       await post.save();
-      res.status(200).send(post);
+     await model.getCvs(post , res)
     } catch (error) {
       res.status(400).send({
         apiStatus: false,

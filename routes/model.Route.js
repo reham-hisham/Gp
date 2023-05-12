@@ -10,6 +10,4 @@ const companyUserAuth = require('../middleware/companyUserAuth')
 //router.post("/profile", userController.uploadProfileImage);
 //////////////// user ////////////////////////////////////
 
-router.get('/jobpost'  , postController.jobPost)
-router.get('/cv/:id' , postController.getCvs )
 module.exports = router;
