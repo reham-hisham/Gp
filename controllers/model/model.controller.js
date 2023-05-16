@@ -22,12 +22,12 @@ class posts {
     
     try{
     
-      console.log({post : post , users : cvs})
+      console.log({description : post.description , SkillsNiceToHave : post.SkillsNiceToHave ,  skillsMustHave  :post.skillsMustHave  , users : cvs})
   await  axios({
     method: 'post',
     url: 'http://127.0.0.1:8000/example',
     
-     data:{post : post.d , users : cvs},
+     data:{description : post.description ,  skillsMustHave  :post.skillsMustHave  , users : cvs},
     
    
       headers: {'Content-Type' : 'application/json'},
@@ -62,16 +62,15 @@ class posts {
   static getCvs = async (jobPost , res) => {
     try {
 let cvs
-console.log(jobPost)
           if(jobPost.workingType= "Remote"){
-          cvs  = await user.find({ jobType : jobPost.jobType   , industry:jobPost.industry})
+          cvs  = await user.find({ jobType : jobPost.jobType   , industry:jobPost.industry}).select("_id cv languages birthdate")
 
           }
           else{
-                     cvs = await user.find({country : jobPost.Country , city : jobPost.City , jobType : jobPost.jobType , industry:jobPost.industry  })
+                     cvs = await user.find({country : jobPost.Country , city : jobPost.City , jobType : jobPost.jobType , industry:jobPost.industry  }).select("_id cv languages birthdate")
 
           }
-
+          console.log(cvs)
           if(jobPost.maxAge){
           cvs= cvs.filter(async (e)=>{
             await this.calculateAge(e.birthdate) <= jobPost.maxAge
@@ -79,8 +78,7 @@ console.log(jobPost)
 
 
           }
- cvs.tokens =[]
- cvs.password =null 
+ 
  await this.sendJobandCVtoModel(jobPost , cvs  , res)
 //await this.sendJobandCVtoModel(jobPost , cvs)
     } catch (error) {
