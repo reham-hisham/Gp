@@ -123,6 +123,7 @@ const userSchema = mongoose.Schema(
     yearsOfExperience: Number,
     image: String,
     cv: String,
+    public_id: String,
     skills: [
       {
         SkillName: String,

@@ -62,11 +62,11 @@ let data =  await  axios({
     try {
 let cvs
           if(jobPost.workingType= "Remote"){
-          cvs  = await user.find({ jobType : jobPost.jobType   , industry:jobPost.industry}).select("_id cv languages birthdate")
+          cvs  = await user.find({ jobType : jobPost.jobType   , industry:jobPost.industry}).select("_id cv languages birthdate public_id")
 
           }
           else{
-                     cvs = await user.find({country : jobPost.Country , city : jobPost.City , jobType : jobPost.jobType , industry:jobPost.industry  }).select("_id cv languages birthdate")
+                     cvs = await user.find({country : jobPost.Country , city : jobPost.City , jobType : jobPost.jobType , industry:jobPost.industry  }).select("_id cv languages birthdate public_id")
 
           }
           console.log(cvs)

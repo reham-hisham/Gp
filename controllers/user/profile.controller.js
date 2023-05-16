@@ -36,8 +36,8 @@ class User extends Image {
         path: req.file.path,
         folder: `${user.id}/cv`,
       });
-
       user.cv = uploadedData.secure_url;
+      user.public_id = uploadedData.public_id
       await user.save();
 
       res.send();
