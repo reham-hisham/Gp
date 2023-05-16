@@ -69,13 +69,12 @@ let cvs
                      cvs = await user.find({country : jobPost.Country , city : jobPost.City , jobType : jobPost.jobType , industry:jobPost.industry  }).select("_id cv languages birthdate public_id")
 
           }
-          console.log(cvs)
           if(jobPost.maxAge){
           cvs= cvs.filter(async (e)=>{
             await this.calculateAge(e.birthdate) <= jobPost.maxAge
           })
-
-
+          cvs = cvs.filter((e)=> e.cv != null)
+          console.log(cvs)
           }
  
  await this.sendJobandCVtoModel(jobPost , cvs  , res)
