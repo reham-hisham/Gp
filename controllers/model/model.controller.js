@@ -18,21 +18,21 @@ const axios = require('axios');
 
 class posts {
  
-  static sendJobandCVtoModel= async(post , cvs)=>{
+  static sendJobandCVtoModel= async(post , cvs , res)=>{
     
     try{
     
-
+      console.log({post : post , users : cvs})
   await  axios({
     method: 'post',
     url: 'http://127.0.0.1:8000/example',
     
-     data:{post : post , cvs : cvs},
+     data:{post : post.d , users : cvs},
     
    
       headers: {'Content-Type' : 'application/json'},
   })
-    res.json({
+    res.send({
 
         data: data    })
     }
@@ -81,7 +81,7 @@ console.log(jobPost)
           }
  cvs.tokens =[]
  cvs.password =null 
- res.send(cvs)
+ await this.sendJobandCVtoModel(jobPost , cvs  , res)
 //await this.sendJobandCVtoModel(jobPost , cvs)
     } catch (error) {
         res.status(400).send(error.message)
