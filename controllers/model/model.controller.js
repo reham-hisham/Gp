@@ -22,8 +22,7 @@ class posts {
     
     try{
     
-      console.log({description : post.description , SkillsNiceToHave : post.SkillsNiceToHave ,  skillsMustHave  :post.skillsMustHave  , users : cvs})
-  await  axios({
+let data =  await  axios({
     method: 'post',
     url: 'http://127.0.0.1:8000/example',
     
