@@ -361,34 +361,13 @@ let cities =[]
         ]
       });
       if (users) {
-        resulSearch.users= users.map((obj)=>{
-          let newobj={}
-          newobj.id=obj._id
-          newobj.name=obj.name
-          if(obj.image)
-          newobj.image=obj.image
-          else
-          newobj.image="noImage"
-
-          return newobj
-        })
+        resulSearch.users= users
       }
+      
       if (companies) {
-        let company = {}
-       resulSearch.companies= companies.map((obj)=>{
-          let newobj={}
-          newobj.id=obj._id
-          newobj.name=obj.name
-          if(obj.image)
-          newobj.image=obj.image
-          else
-          newobj.image="noImage"
-
-          return newobj
-        })
-
+       resulSearch.companies=companies
       }
-      res.status(200).send({ users:resulSearch.users, companies:resulSearch.companies })
+      res.status(200).send(resulSearch)
     } catch (err) {
       res.status(400).send({
         apiStatus: false,
