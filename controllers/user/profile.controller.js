@@ -341,8 +341,9 @@ let cities =[]
   }
   static search = async (req, res) => {
     try {
+      console.log("dsadqwe");
       const query = req.body.search;
-      let resulSearch = []
+      let resulSearch = { users: [], companies: [] }
       const regex = new RegExp(query, 'i');
       const users = await userModel.find({
         $or: [
@@ -360,27 +361,34 @@ let cities =[]
         ]
       });
       if (users) {
-        let user={}
-        users.forEach(element => {
-              user.data = element
-                  user.type ="user"
+        resulSearch.users= users.map((obj)=>{
+          let newobj={}
+          newobj.id=obj._id
+          newobj.name=obj.name
+          if(obj.image)
+          newobj.image=obj.image
+          else
+          newobj.image="noImage"
 
-        
-        });
-        resulSearch.push({user: user})
+          return newobj
+        })
       }
       if (companies) {
-        let company ={}
-        companies.forEach(element => {
-          company = element
-      
-    
-    });
-    company.type ="company"
-    resulSearch.push({company: company})
+        let company = {}
+       resulSearch.companies= companies.map((obj)=>{
+          let newobj={}
+          newobj.id=obj._id
+          newobj.name=obj.name
+          if(obj.image)
+          newobj.image=obj.image
+          else
+          newobj.image="noImage"
+
+          return newobj
+        })
+
       }
-console.log(resulSearch)
-      res.status(200).send(resulSearch)
+      res.status(200).send({ users:resulSearch.users, companies:resulSearch.companies })
     } catch (err) {
       res.status(400).send({
         apiStatus: false,
