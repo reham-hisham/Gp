@@ -30,6 +30,11 @@ const CompanySchema = mongoose.Schema(
       required: true,
       max: 200,
     },
+    
+    industry:{
+      type:String,
+      required:[true,"please provide ur industry"]
+    },
     country: {
       type: String,
       required: true,

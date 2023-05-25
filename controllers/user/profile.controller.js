@@ -345,6 +345,7 @@ let cities =[]
       const query = req.body.search;
       let resulSearch = { users: [], companies: [] }
       const regex = new RegExp(query, 'i');
+      console.log(regex);
       const users = await userModel.find({
         $or: [
           { name: { $regex: regex } },
@@ -367,6 +368,8 @@ let cities =[]
       if (companies) {
        resulSearch.companies=companies
       }
+    
+   
       res.status(200).send(resulSearch)
     } catch (err) {
       res.status(400).send({
