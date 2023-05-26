@@ -10,7 +10,8 @@ class posts {
     try {
       const post = await new PostModel(req.body);
       post.user = req.user._id;
-      if (!isImage(req.file.originalname)) {
+      if(req.file){
+        if (!isImage(req.file.originalname)) {
         throw new Error("only images allowed");
       }
 
@@ -20,8 +21,15 @@ class posts {
       });
 
       post.image = uploadedData.secure_url;
+      
+      }
+      else{
+        const post = await new PostModel(req.body);
+        post.user = req.user._id;
+      }
       await post.save();
-      res.status(200).send(post);
+            res.status(200).send(post);
+
     } catch (error) {
       res.status(400).send({
         apiStatus: false,
