@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const post = require('../models/jopPost.model')
 const notstrictauth = require('../middleware/notstrictauth')
-
+const companyUserAuth = require('../middleware/companyUserAuth')
 const multer = require("multer");
 const upload = multer({ dest: "images/" });
 const jopPostController = require('../controllers/company/jobpost.controller')
@@ -27,6 +27,7 @@ router.post(
   router.delete('/delete/post/:id', companyAuth , CompanyPostController.deletePost)
 router.post('/jobpost', companyAuth , jopPostController.create)
 router.delete('/delete/jobpost/:id', companyAuth , jopPostController.deleteJobPost)
+router.post('/follow/:id' , companyUserAuth , companyProfileController.ultimateFollowForcompanies)
 
 
 

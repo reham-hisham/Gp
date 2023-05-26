@@ -1,7 +1,7 @@
 const CompanyModel = require("../../models/company.model");
 const isImage = require("is-image");
 const cloudinaryhelper = require("../../middleware/cloudinary");
-
+const companyFollowModel=require('../../models/companiesFollowCompanies')
 const otp = require("../../helper/sendOTP");
 const sendEmail = require("../../helper/sendEmail");
 const oldposts = require("../../models/oldJops.model");
@@ -234,5 +234,49 @@ let isFollowed = false
       });
     }
   };
+  static ultimateFollowForcompanies = async (req,res)=>{
+    const userId = req.user._id;
+    const compId = req.params.id;
+    let isFollowed=false
+
+    try {
+      let followObject = await companyFollowModel.findOne({followerId:userId});
+      if(!followObject){
+        followObject=await companyFollowModel.create({followerId:userId,companyId:compId})
+        isFollowed=true;
+      }else if(followObject){
+        let isFound =false
+        followObject.companyId.forEach((e)=>{
+          if(e.toString() == compId.toString()){
+            console.log("we erach here")
+            isFound = true
+          }
+        })
+        
+        if (!isFound){ followObject.companyId.push(compId);
+        isFollowed=true
+        }
+        else
+        {  let companies = []
+          followObject.companyId.forEach(element => {
+            if(element.toString() != compId.toString()){
+              companies.push(element)
+              
+            }
+          });
+          followObject.companyId = companies}
+      }
+      await followObject.save();
+
+
+      res.send({ followObject,isFollowed });
+    } catch (error) {
+      res.status(400).send({
+        apiStatus: false,
+        data: error.message,
+        message: "error adding follow",
+      });
+    }
+  }
 }
 module.exports = company;

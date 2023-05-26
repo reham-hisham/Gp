@@ -10,6 +10,7 @@ class posts {
     try {
       const post = await new PostModel(req.body);
       post.user = req.user._id;
+      console.log(req.file);
       if(req.file){
         if (!isImage(req.file.originalname)) {
         throw new Error("only images allowed");
