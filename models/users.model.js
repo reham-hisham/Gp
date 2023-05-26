@@ -117,7 +117,8 @@ const userSchema = mongoose.Schema(
         "Media and Entertainment",
         "Government and Public Services",
         "other"
-      ]
+      ],
+      default:"other"
       
     },
     yearsOfExperience: Number,
@@ -132,23 +133,32 @@ const userSchema = mongoose.Schema(
     ],
 
     currentCareerlevel: {
+      type:String,
       enum: [
         "Student",
         "Entry Level",
         "Experienced",
         "Manager",
         "senior Management",
+        ""
       ],
+      default:""
     },
     jopType: {
+      type:String,
+
       enum: [
         "Full Time",
         "Part Time",
         "intership",
-        "other"
+        "other",
+        ""
       ],
+      default:""
     },
     currentEducationalLevel: {
+      type:String,
+
       enum: [
         "Bachelors Degree",
         "Master Degree",
@@ -156,7 +166,9 @@ const userSchema = mongoose.Schema(
         "High school",
         "Vocational",
         "Diploma",
+        ""
       ],
+      default:""
     },
     fieldOfStudy: String,
     University: String,
