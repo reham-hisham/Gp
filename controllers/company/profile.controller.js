@@ -133,14 +133,28 @@ static deleteProfileImage = async (req , res)=>{
   static getCompanyDataById = async (req, res) => {
     const company = await CompanyModel.findById(req.params.id)
 let isFollowed = false
-    if(req.user){
-      let follow = await followModel.findOne({followerId: req.user._id})
+let userRole=req.user.collection.name
+    if(req.user&&userRole=='companies'){
+      let follow = await companyFollowModel.findOne({followerId: req.user._id})
+      console.log(follow.companyId);
       follow.companyId.forEach((e)=>{
-     
+        
         if(e.toString() == company._id.toString()){
           isFollowed = true
         }
       })
+    }
+    else if(req.user&&userRole=='users'){
+      console.log(userRole);
+      let follow = await followModel.findOne({followerId: req.user._id})
+      console.log(follow.companyId);
+      follow.companyId.forEach((e)=>{
+        
+        if(e.toString() == company._id.toString()){
+          isFollowed = true
+        }
+      })
+
     }
     res.send({
       apiStatus: true,
