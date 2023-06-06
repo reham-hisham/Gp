@@ -14,7 +14,10 @@ const CompanySchema = mongoose.Schema(
       trim: true,
       required: true,
     },
-    about:String,
+    about:{
+      type :String , 
+      required : true
+    },
    
     number: {
       type: String,

@@ -4,33 +4,30 @@ const PostModel = require("../../models/post.model");
 const { options } = require("../../routes/user.Route");
 const isImage = require("is-image");
 const cloudinaryhelper = require("../../middleware/cloudinary");
-const companiesFollow=require('../../models/companiesFollowCompanies')
+const companiesFollow = require("../../models/companiesFollowCompanies");
 class posts {
   static create = async (req, res) => {
     try {
       const post = await new PostModel(req.body);
       post.user = req.user._id;
       console.log(req.file);
-      if(req.file){
+      if (req.file) {
         if (!isImage(req.file.originalname)) {
-        throw new Error("only images allowed");
-      }
+          throw new Error("only images allowed");
+        }
 
-      const uploadedData = await cloudinaryhelper({
-        path: req.file.path,
-        folder: post._id,
-      });
+        const uploadedData = await cloudinaryhelper({
+          path: req.file.path,
+          folder: post._id,
+        });
 
-      post.image = uploadedData.secure_url;
-      
-      }
-      else{
+        post.image = uploadedData.secure_url;
+      } else {
         const post = await new PostModel(req.body);
         post.user = req.user._id;
       }
       await post.save();
-            res.status(200).send(post);
-
+      res.status(200).send(post);
     } catch (error) {
       res.status(400).send({
         apiStatus: false,
@@ -57,39 +54,47 @@ class posts {
       else if (req.user.collection.name === "companies") {
         followObj = await companiesFollow.findOne({ followerId: req.user._id });
       }
-      const posts = await PostModel.find({
-        user: { $in: followObj.companyId },
-        createdAt: { $lt: lastPostSeen },
-      })
-        .populate({
-          path: "user",
-
-          select: " name email image",
+      if (followObj) {
+        const posts = await PostModel.find({
+          user: { $in: followObj.companyId },
+          createdAt: { $lt: lastPostSeen },
         })
-        .sort({ createdAt: -1 })
-        .limit(10);
+          .populate({
+            path: "user",
 
-      posts.forEach((post) => {
-        post.reactions.forEach((reaction) => {
-          if (req.user._id.toString() == reaction.user.toString()) {
-            post.isLiked = true;
-          } else {
-            post.isLiked = false;
-          }
+            select: " name email image",
+          })
+          .sort({ createdAt: -1 })
+          .limit(10);
+
+        posts.forEach((post) => {
+          post.reactions.forEach((reaction) => {
+            if (req.user._id.toString() == reaction.user.toString()) {
+              post.isLiked = true;
+            } else {
+              post.isLiked = false;
+            }
+          });
         });
-      });
 
-      const pp = await PostModel.find({
-        user: { $in: followObj.companyId },
-        updatedAt: { $gt: lastPostSeen },
-      }).count();
-      if (pp > startingPoint) isUpdated = false;
-      else isUpdated = true;
-      res.json({
-        apiStatus: true,
-        data: posts,
-        isUpdated: isUpdated,
-      });
+        const pp = await PostModel.find({
+          user: { $in: followObj.companyId },
+          updatedAt: { $gt: lastPostSeen },
+        }).count();
+        if (pp > startingPoint) isUpdated = false;
+        else isUpdated = true;
+        res.json({
+          apiStatus: true,
+          data: posts,
+          isUpdated: isUpdated,
+        });
+      } else {
+        res.json({
+          apiStatus: true,
+          data: [],
+          isUpdated: isUpdated,
+        });
+      }
     } catch (err) {
       res.status(400).send({
         apiStatus: false,
@@ -204,16 +209,19 @@ class posts {
   static getCompanyPosts = async (req, res) => {
     const lastPostSeen = req.body.lastPostSeen || Date.now();
     try {
-      console.log("f")
-      const posts = await PostModel.find({ user:req.params.id,createdAt: { $lt: lastPostSeen }})
-          .populate({
-            path: "user",
+      console.log("f");
+      const posts = await PostModel.find({
+        user: req.params.id,
+        createdAt: { $lt: lastPostSeen },
+      })
+        .populate({
+          path: "user",
 
-            select: " name email image",
-          })
-          .sort({ createdAt: -1 })
-          
-          .limit(10);
+          select: " name email image",
+        })
+        .sort({ createdAt: -1 })
+
+        .limit(10);
       if (req.user) {
         posts.forEach((element) => {
           element.reactions.forEach((reaction) => {
@@ -222,12 +230,9 @@ class posts {
             }
           });
         });
-      }else{
+      } else {
         posts.forEach((element) => {
-          
-              element.isLiked = false;
-          
-          
+          element.isLiked = false;
         });
       }
 
