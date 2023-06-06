@@ -3,6 +3,7 @@ const validator = require("validator");
 const isphone = require("is-phone");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const follow = require("../models/followCompanies")
 let regex = new RegExp(
   /^(?!.\s)(?=.[A-Z])(?=.[a-z])(?=.[0-9])(?=.[~`!@#$%^&()--+={}\[\]|\\:;"'<>,.?/_₹]).{10,16}$/
 );
@@ -120,5 +121,6 @@ CompanySchema.methods.generateToken = async function () {
   await user.save();
   return token;
 };
-const Company = mongoose.model("Company", CompanySchema);
+
+const Company = mongoose.model("Company", CompanySchema)
 module.exports = Company;
