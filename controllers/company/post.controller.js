@@ -4,7 +4,7 @@ const PostModel = require("../../models/post.model");
 const { options } = require("../../routes/user.Route");
 const isImage = require("is-image");
 const cloudinaryhelper = require("../../middleware/cloudinary");
-
+const companiesFollow=require('../../models/companiesFollowCompanies')
 class posts {
   static create = async (req, res) => {
     try {
@@ -48,32 +48,36 @@ class posts {
     const lastPostSeen = req.body.lastPostSeen || Date.now();
     let isUpdated;
     try {
-      const followObj = await followModel.findOne({ followerId: req.user._id });
+      let followObj;
+      console.log(req.user.collection.name);
+      let companyOwnPost;
 
+      if (req.user.collection.name === "users")
+        followObj = await followModel.findOne({ followerId: req.user._id });
+      else if (req.user.collection.name === "companies") {
+        followObj = await companiesFollow.findOne({ followerId: req.user._id });
+      }
       const posts = await PostModel.find({
         user: { $in: followObj.companyId },
         createdAt: { $lt: lastPostSeen },
       })
-      .populate({
-        path: "user",
-    
-        select: " name email image",
-      })
+        .populate({
+          path: "user",
+
+          select: " name email image",
+        })
         .sort({ createdAt: -1 })
         .limit(10);
 
-      posts.forEach(post => {
-        post.reactions.forEach((reaction)=>{
-          if(req.user._id.toString()==reaction.user.toString())
-          {
-            post.isLiked=true
-            
-          }else{
-            post.isLiked=false
+      posts.forEach((post) => {
+        post.reactions.forEach((reaction) => {
+          if (req.user._id.toString() == reaction.user.toString()) {
+            post.isLiked = true;
+          } else {
+            post.isLiked = false;
           }
-        })
+        });
       });
-       
 
       const pp = await PostModel.find({
         user: { $in: followObj.companyId },
