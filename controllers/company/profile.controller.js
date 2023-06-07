@@ -101,6 +101,7 @@ class company extends Image {
           token: token,
           name: userData.name,
           email: userData.email,
+          image: userData.image,
         },
       });
     } catch (e) {
@@ -205,7 +206,6 @@ class company extends Image {
   };
   static edit = async (req, res) => {
     try {
-
       //recrypt the password again
       if (req.body.password) {
         throw new Error("canpt rest password from here");

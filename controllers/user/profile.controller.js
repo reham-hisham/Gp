@@ -7,8 +7,8 @@ const cloudinary = require("cloudinary");
 const Image = require("../common/image.controller");
 const companyModel = require("../../models/company.model");
 const user = require("../../models/users.model");
-const followModel = require("../../models/followCompanies")
-const postModel = require('../../models/post.model')
+const followModel = require("../../models/followCompanies");
+const postModel = require("../../models/post.model");
 // Get instance by resolving ClamScan promise object
 const { Country, State, City } = require("country-state-city");
 // OTP = 0 -> can login
@@ -16,7 +16,7 @@ class User extends Image {
   static register = async (req, res) => {
     try {
       const userData = new userModel(req.body);
-      userData.minSalary = { value: req.body.minSalary }
+      userData.minSalary = { value: req.body.minSalary };
       await userData.save();
       await this.SendOTP(req, res);
       res.status(200).send();
@@ -37,7 +37,7 @@ class User extends Image {
         folder: `${user.id}/cv`,
       });
       user.cv = uploadedData.secure_url;
-      user.public_id = uploadedData.public_id
+      user.public_id = uploadedData.public_id;
       await user.save();
 
       res.send();
@@ -76,6 +76,7 @@ class User extends Image {
       if (userData.isBlocked) {
         throw new Error("Blocked ");
       }
+      console.log(userData)
       const token = await userData.generateToken();
       if (userData.OTP != 0) {
         console.log(userData.OTP);
@@ -87,8 +88,9 @@ class User extends Image {
           id: userData._id,
           token: token,
           name: userData.name,
-          email: userData.email
-        }
+          email: userData.email,
+          image: userData.image,
+        },
       });
     } catch (e) {
       res.status(400).send({
@@ -98,42 +100,44 @@ class User extends Image {
       });
     }
   };
-  static ultimateFollow = async (req,res)=>{
+  static ultimateFollow = async (req, res) => {
     const userId = req.user._id;
     const compId = req.params.id;
-    let isFollowed=false
+    let isFollowed = false;
 
     try {
-      let followObject = await followModel.findOne({followerId:userId});
-      if(!followObject){
-        followObject=await followModel.create({followerId:userId,companyId:compId})
-        isFollowed=true;
-      }else if(followObject){
-        let isFound =false
-        followObject.companyId.forEach((e)=>{
-          if(e.toString() == compId.toString()){
-            console.log("we erach here")
-            isFound = true
+      let followObject = await followModel.findOne({ followerId: userId });
+      if (!followObject) {
+        followObject = await followModel.create({
+          followerId: userId,
+          companyId: compId,
+        });
+        isFollowed = true;
+      } else if (followObject) {
+        let isFound = false;
+        followObject.companyId.forEach((e) => {
+          if (e.toString() == compId.toString()) {
+            console.log("we erach here");
+            isFound = true;
           }
-        })
-        
-        if (!isFound){ followObject.companyId.push(compId);
-        isFollowed=true
-        }
-        else
-        {  let companies = []
-          followObject.companyId.forEach(element => {
-            if(element.toString() != compId.toString()){
-              companies.push(element)
-              
+        });
+
+        if (!isFound) {
+          followObject.companyId.push(compId);
+          isFollowed = true;
+        } else {
+          let companies = [];
+          followObject.companyId.forEach((element) => {
+            if (element.toString() != compId.toString()) {
+              companies.push(element);
             }
           });
-          followObject.companyId = companies}
+          followObject.companyId = companies;
+        }
       }
       await followObject.save();
 
-
-      res.send({ followObject,isFollowed });
+      res.send({ followObject, isFollowed });
     } catch (error) {
       res.status(400).send({
         apiStatus: false,
@@ -141,7 +145,7 @@ class User extends Image {
         message: "error adding follow",
       });
     }
-  }
+  };
   static unFollowCompany = async (req, res) => {
     const followerId = req.user._id;
     const comapanyId = req.params.userId;
@@ -154,25 +158,23 @@ class User extends Image {
         await follow.save();
         res.send({ msg: "modified succ" });
       } else {
-        res.status(404).send({ error: 'Follow model not found' });
+        res.status(404).send({ error: "Follow model not found" });
       }
     } catch (error) {
       res.status(400).send({
         apiStatus: false,
         data: error.message,
-      })
+      });
     }
-
-  }
-
-  static deleteProfileImage = async (req, res) => {
-    this.deleteImage(req, res)
   };
 
+  static deleteProfileImage = async (req, res) => {
+    this.deleteImage(req, res);
+  };
 
   static getUserData = async (req, res) => {
-    req.user.password = null
-    req.user.tokens = null
+    req.user.password = null;
+    req.user.tokens = null;
     res.send(req.user);
   };
 
@@ -244,15 +246,11 @@ class User extends Image {
         (e) => e.name == req.body.country
       );
 
-
       let states = State.getStatesOfCountry(CountryReq[0].isoCode);
-let cities =[]
+      let cities = [];
       states.forEach((state) => {
-       
-          cities.push(  state.name.replace(" Governorate", ""))
-        
+        cities.push(state.name.replace(" Governorate", ""));
       });
-     
 
       res.status(201).send(cities);
     } catch (e) {
@@ -286,7 +284,6 @@ let cities =[]
 
   static confiremOtp = async (req, res) => {
     try {
-
       let user = await userModel.findOne({ email: req.body.email });
       if (req.body.OTP == user.OTP) {
         user.OTP = 0;
@@ -323,61 +320,53 @@ let cities =[]
   };
 
   static viewAccount = async (req, res) => {
-
     try {
-      const account = await userModel.findById(req.params.id)
-      account.password = null
-      account.tokens = []
-      account.OTP = null
+      const account = await userModel.findById(req.params.id);
+      account.password = null;
+      account.tokens = [];
+      account.OTP = null;
 
       res.send(account);
-
     } catch (error) {
       res.status(400).send({
         apiStatus: false,
         message: error.message,
       });
     }
-  }
+  };
   static search = async (req, res) => {
     try {
       console.log("dsadqwe");
       const query = req.body.search;
-      let resulSearch = { users: [], companies: [] }
-      const regex = new RegExp(query, 'i');
+      let resulSearch = { users: [], companies: [] };
+      const regex = new RegExp(query, "i");
       console.log(regex);
       const users = await userModel.find({
         $or: [
           { name: { $regex: regex } },
           { title: { $regex: regex } },
           { jobTitles: { $regex: regex } },
-          { industry: { $regex: regex } }
-        ]
+          { industry: { $regex: regex } },
+        ],
       });
       const companies = await companyModel.find({
-        $or: [
-          { name: { $regex: regex } },
-          { industry: { $regex: regex } }
-
-        ]
+        $or: [{ name: { $regex: regex } }, { industry: { $regex: regex } }],
       });
       if (users) {
-        resulSearch.users= users
+        resulSearch.users = users;
       }
-      
+
       if (companies) {
-       resulSearch.companies=companies
+        resulSearch.companies = companies;
       }
-    
-   
-      res.status(200).send(resulSearch)
+
+      res.status(200).send(resulSearch);
     } catch (err) {
       res.status(400).send({
         apiStatus: false,
         data: err.message,
       });
     }
-  }
-  
+  };
 }
 module.exports = User;
