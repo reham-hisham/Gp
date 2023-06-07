@@ -27,7 +27,14 @@ class posts {
         post.user = req.user._id;
       }
       await post.save();
-      res.status(200).send(post);
+
+      res.status(200).send(
+        await post.populate({
+          path: "user",
+
+          select: " name email image",
+        })
+      );
     } catch (error) {
       res.status(400).send({
         apiStatus: false,
