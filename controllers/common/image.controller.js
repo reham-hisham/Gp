@@ -14,6 +14,7 @@ class Image {
       });
 
       req.user.image = uploadedData.secure_url;
+      req.user.public_id=uploadedData.public_id
       await req.user.save();
 
       res.send(req.user.image);
@@ -29,15 +30,16 @@ class Image {
     try {
       let e;
       if (req.user.image) {
-        let imageName = req.user.image.split("upload/")[1];
+      /*  let imageName = req.user.image.split("upload/")[1];
         imageName = imageName.split("/");
         imageName = imageName[1] + "/" + imageName[2];
         console.log(imageName);
-        imageName = imageName.split(".")[0];
+        imageName = imageName.split(".")[0]; */
         await cloudinary.uploader.destroy(
-          "yi3ezkbtyrcfzduqmyck",
-          { location: imageName },
+          req.user.public_id,
+          { location: `compnay/${req.user._id}` },
           function (error, result) {
+            console.log(result);
             if (error.result != "ok") {
               console.log(error);
               e = error;
