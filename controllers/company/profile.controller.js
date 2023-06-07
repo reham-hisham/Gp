@@ -205,6 +205,7 @@ class company extends Image {
   };
   static edit = async (req, res) => {
     try {
+
       //recrypt the password again
       if (req.body.password) {
         throw new Error("canpt rest password from here");
@@ -214,15 +215,15 @@ class company extends Image {
         delete req.body.email;
       }
 
-      const userUpdated = await CompanyModel.updateOne(
-        { id: req.user._id },
+      const userUpdated = await CompanyModel.findOneAndUpdate(
+        { _id: req.user._id },
         req.body,
         { upsert: false, runValidators: true }
       );
-
+      console.log(userUpdated);
       res.send({
         apiStatus: true,
-        data: userUpdated,
+
         message: "updates",
       });
     } catch (e) {

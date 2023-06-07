@@ -1,0 +1,19 @@
+
+@startuml test
+
+activate User
+activate System
+
+
+User->System : Accept/Reject job offer 
+
+activate Database
+
+System->Database : edit job offer  
+System -> User : your response to job offer sent successfully 
+deactivate Database
+deactivate User
+deactivate System
+
+
+@enduml

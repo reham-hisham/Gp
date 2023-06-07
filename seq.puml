@@ -1,4 +1,37 @@
+<!-- task definition -->
+<taskdef name="plantuml" classname="net.sourceforge.plantuml.ant.PlantUmlTask" classpath="plantuml.jar" />
+<!-- process diagram.txt file -->
+<target name="images">
+<plantuml format="pdf">
+<fileset file="diagram.txt" />
+</plantuml>
+</target>
 @startuml test
-User->World : Hello World!
-dev -> man : new 
+
+activate Company
+
+
+Company->System : Job post 
+System->Database : Job post data
+activate Database
+alt valid job post 
+    activate System
+    Database -> System: job post data after save
+    deactivate Database
+    System -> System : filter cvs based on requermints 
+    System -> Model : filtered CVs & job post data
+    activate Model
+    Model -> Model : process cvs and job data 
+    Model -> Model : train model on the same number of skills requierd 
+    Model -> Model : Rank CVs based on skills
+    Model -> System : Ranked CVs
+    deactivate Model 
+    System -> Company : Ranked users with their CVs
+else non valid job post 
+
+    System -> Company : nonvalid data  
+    deactivate System 
+    deactivate Company 
+
+end
 @enduml

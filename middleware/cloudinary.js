@@ -7,7 +7,7 @@ cloudinary.config({
 async function  uploadImage (req, res){
    console.log("ref",req)
    let data
-    await cloudinary.uploader.upload(req.path, { resource_type: 'image' , folder:  req.folder},(error, result) => {
+    await cloudinary.uploader.upload(req.path, { folder:  req.folder, resource_type: 'image' },(error, result) => {
         if (error) {
             console.log(error);
             throw new Error( 'Error uploading image' );

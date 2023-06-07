@@ -1,0 +1,29 @@
+
+@startuml test
+
+activate Company
+activate System
+
+
+Company->System : request follow company 
+
+activate Database
+
+System->Database : request list of followed company by this Company 
+
+alt already followed 
+    System -> Database : remove it from follow list
+    Database -> System : list of followed company by this Company 
+    System -> Company : unfollowed successfully
+else not followed 
+  System -> Database : Add it to follow list
+  Database -> System : list of followed company by this Company 
+  System -> Company : followed successfully
+end 
+
+deactivate Database
+deactivate Company
+deactivate System
+
+
+@enduml

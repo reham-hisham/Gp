@@ -4,6 +4,7 @@ const notstrictauth = require('../middleware/notstrictauth')
 const companyUserAuth = require('../middleware/companyUserAuth')
 const multer = require("multer");
 const upload = multer({ dest: "images/" });
+const imagecontroller = require("../controllers/common/image.controller")
 const jopPostController = require('../controllers/company/jobpost.controller')
 const CompanyPostController = require('../controllers/company/post.controller')
 const companyProfileController = require('../controllers/company/profile.controller')
@@ -15,7 +16,7 @@ router.post("/post",companyAuth,upload.single("postImage"), CompanyPostControlle
 router.post("/logout",companyAuth, companyProfileController.logout);
 router.get("/profile", companyAuth , companyProfileController.getCompanyData)
 router.get("/company/:id" ,notstrictauth, companyProfileController.getCompanyDataById)
-
+router.delete('/delete/image' , companyAuth , imagecontroller.deleteImage) 
 router.post(
     "/companyImage",
     companyAuth,

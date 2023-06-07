@@ -1,0 +1,31 @@
+
+@startuml test
+
+activate Company
+activate System
+
+
+Company->System : Company data 
+
+activate Database
+
+System->Database : add Company 
+
+System -> CompanyEmail : otp
+deactivate Database
+activate CompanyEmail
+
+deactivate CompanyEmail
+Company -> System : otp from email 
+alt valid Otp 
+    System -> Company : succefully loged in 
+else 
+    System -> Company : invalid otp 
+end
+
+deactivate Database
+deactivate Company
+deactivate System
+
+
+@enduml
