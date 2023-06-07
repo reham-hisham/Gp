@@ -53,6 +53,7 @@ class Image {
         }
 
         req.user.image = null;
+        req.user.public_id=null
         await req.user.save();
         res.send();
       } else {
