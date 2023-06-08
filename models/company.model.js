@@ -84,6 +84,10 @@ numberOfemployee:{
         },
       },
     ],
+    public_id:{
+      type:String,
+      required:false
+    }
   },
   { timeStamp: true }
 );

@@ -9,7 +9,6 @@ class posts {
       const post = await jobPostModel.create(req.body);
       post.hiringOrganization = req.user._id;
       await post.save();
-      cons
      await model.getCvs(post , res)
     } catch (error) {
       res.status(400).send({
