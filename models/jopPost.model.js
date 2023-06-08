@@ -56,11 +56,7 @@ const jobPostSchema = new Schema(
     SkillsNiceToHave: {
       Type: Array,
     },
-    skillsMustHave: [
-      {
-        Skill: String,
-      },
-    ],
+    skillsMustHave: [{ type: String, required: true }],
     jobRequirements: [
       {
         type: String,
