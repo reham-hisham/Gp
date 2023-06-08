@@ -12,7 +12,6 @@ class Image {
         path: req.file.path,
         folder: `compnay/${req.user._id}`,
       });
-
       req.user.image = uploadedData.secure_url;
       await req.user.save();
 

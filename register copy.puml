@@ -1,0 +1,20 @@
+
+@startuml search
+
+
+activate Comapny
+activate System
+Comapny->System : add  social post
+
+activate Database
+ System->Database : add post to posts table
+ Database -> System : post data
+
+ deactivate Database
+
+System -> Comapny : Done
+deactivate Comapny
+deactivate System
+
+
+@enduml
