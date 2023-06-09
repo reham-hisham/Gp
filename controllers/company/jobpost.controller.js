@@ -49,10 +49,25 @@ class posts {
   };
   static getAllJobPosts = async (req, res) => {
     try {
-      await jobPostModel.find({
+     const jobpost= await jobPostModel.find({
         hiringOrganization: req.user._id,
+      }).populate({path :"matchedUsers.userId" , select:"name email cv"})
+      res.send(jobpost);
+    } catch (error) {
+      res.status(400).send({
+        apiStatus: false,
+        error: error.message,
+        message: "error delete post",
       });
-      res.send("deleted");
+    }
+  };
+  static getAllJobPosts = async (req, res) => {
+    try {
+     const jobpost= await jobPostModel.find({
+      _id:req.params.id,
+        hiringOrganization: req.user._id,
+      }).populate({path :"matchedUsers.userId" , select:"name email cv"})
+      res.send(jobpost);
     } catch (error) {
       res.status(400).send({
         apiStatus: false,

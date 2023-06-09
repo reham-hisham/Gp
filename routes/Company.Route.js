@@ -29,6 +29,8 @@ router.post(
 router.post('/jobpost', companyAuth , jopPostController.create)
 router.delete('/delete/jobpost/:id', companyAuth , jopPostController.deleteJobPost)
 router.post('/follow/:id' , companyUserAuth , companyProfileController.ultimateFollowForcompanies)
+router.get('/alljobpost', companyAuth , jopPostController.getAllJobPosts)
+router.get('/onjobpost/:id', companyAuth , jopPostController.getAllJobPosts)
 
 
 
