@@ -109,6 +109,18 @@ const jobPostSchema = new Schema(
         type: String,
       },
     ],
+
+    matchedUsers: [
+      {
+        userId: {
+          type:mongoose.Schema.Types.ObjectId,
+           ref: 'User'
+        },
+        rank: {
+          type: Number,
+        },
+      },
+    ],
   },
   { timeStamp: true }
 );
