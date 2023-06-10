@@ -3,10 +3,11 @@ const offerSchema = mongoose.Schema({
   companyId: { required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
   userId: { required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   jobId:{required:true,type:mongoose.Schema.Types.ObjectId,ref:'JobPost'},
-  offerHeader: { required: true, type: String },
+ 
   offerContent: { required: true, type: String },
 
   offerType: {
+    type:String,
     enum: [
       "General Interview",
       "Technical Interview",

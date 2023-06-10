@@ -18,26 +18,31 @@ const axios = require("axios");
 class posts {
   static sendJobandCVtoModel = async (post, cvs, res) => {
     try {
-      // let data = await axios({
-      //   method: "post",
-      //   url: "http://127.0.0.1:8000/example",
+      console.log(cvs);
+      let data = await axios({
+        method: "post",
+        url: "  ",
 
-      //   data: {
-      //     description: post.description,
-      //     skillsMustHave: post.skillsMustHave,
-      //     users: cvs,
-      //   },
+        data: {
+          description: post.description,
+          skillsMustHave: post.skillsMustHave,
+          users: cvs,
+        },
 
-      //   headers: { "Content-Type": "application/json" },
-      // });
-      const user = await userModel
-        .findOne({ name: "reham100" })
-        .select("name email cv");
-      let users = [{ user: user, ranke: 45 }];
-      console.log(user);
+        headers: { "Content-Type": "application/json" },
+      });
+
+      let finalcvs = await axios({
+        method: "post",
+        url: "http://127.0.0.1:8888/testing",
+
+        data: { skills: data.data, users: cvs },
+
+        headers: { "Content-Type": "application/json" },
+      });
       res.send({
-        post: post,
-        users: users,
+        status: true,
+        data: finalcvs,
       });
     } catch (err) {
       res.status(400).send({
@@ -63,11 +68,11 @@ class posts {
     try {
       let cvs;
       if ((jobPost.workingType = "Remote")) {
-        cvs = await user
+        cvs = await userModel
           .find({ jobType: jobPost.jobType, industry: jobPost.industry })
           .select("_id cv languages birthdate public_id");
       } else {
-        cvs = await user
+        cvs = await userModel
           .find({
             country: jobPost.Country,
             city: jobPost.City,

@@ -68,6 +68,7 @@ const jobPostSchema = new Schema(
 
     // },
     employmentType: {
+      type: String,
       enum: ["women", "men"],
     },
     numberOfresivedCVs: {
@@ -82,9 +83,11 @@ const jobPostSchema = new Schema(
       ref: "Company",
     },
     workingType: {
+      type: String,
       enum: ["On-site", "Remote", "Hybrid"],
     },
     jobType: {
+      type: String,
       enum: ["Full-Time", "Part-Time", "Internship", "other"],
     },
 

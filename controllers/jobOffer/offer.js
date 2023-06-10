@@ -1,9 +1,10 @@
 const CompanyModel = require("../../models/company.model");
-const offerModel = require('../../models/jobOffer.model')
+const offerModel = require('../../models/jobOffer')
 class offer {
     static sendOffer = async (req, res) => {
         try {
             const jobOffer = new offerModel(req.body)
+            jobOffer.companyId = req.user_id
             jobOffer.save()
             res.send({
                 apiStatus: 'success',
