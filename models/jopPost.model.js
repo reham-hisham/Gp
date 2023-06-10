@@ -116,8 +116,8 @@ const jobPostSchema = new Schema(
     matchedUsers: [
       {
         userId: {
-          type:mongoose.Schema.Types.ObjectId,
-           ref: 'User'
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
         },
         rank: {
           type: Number,
