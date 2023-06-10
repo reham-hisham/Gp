@@ -1,11 +1,12 @@
 const CompanyModel = require("../../models/company.model");
 const offerModel = require("../../models/jobOffer");
+const company=require('../../models/company.model')
 
 class offer {
   static sendOffer = async (req, res) => {
     try {
       const jobOffer = new offerModel(req.body);
-      jobOffer.companyId = req.user_id;
+      jobOffer.companyId = req.user._id;
       jobOffer.save();
       res.send({
         apiStatus: "success",
@@ -23,7 +24,7 @@ class offer {
     try {
       const offers = await offerModel
         .find({ userId: req.user._id })
-        .populate({ path: "Company", select: { _id: 1, name: 1 } });
+        .populate({ path: "companyId", select: "_id , name  "});
       res.send({
         apiStatus: "success",
         data: offers,
