@@ -7,6 +7,7 @@ const upload = multer({ dest: "images/" });
 const oldposts = require('../models/oldJops.model')
 const companyUserAuth = require('../middleware/companyUserAuth')
 const notstrictauth = require('../middleware/notstrictauth')
+const offers=require('../controllers/jobOffer/offer')
 //router.post("/profile", userController.uploadProfileImage);
 //////////////// user ////////////////////////////////////
 router.post("/register", userController.register); //Done
@@ -49,5 +50,7 @@ router.post('/follow/:id' , companyUserAuth , userController.ultimateFollow)
 router.post("/companyPosts/:id" ,notstrictauth, postController.getCompanyPosts)
 router.get('/country',  userController.getAllCountrisInWorld)
 router.post('/city',  userController.getcities)
+router.get('/recieveJobOffers',auth,offers.recieveOffers)
+router.patch('/setOfferState',auth,offers.setOfferState)
 
 module.exports = router;

@@ -23,8 +23,7 @@ class offer {
     try {
       const offers = await offerModel
         .find({ userId: req.user._id })
-        .populate({ path: "Company", select: { _id: 1, name: 1, image: 1 } });
-      await offers.save();
+        .populate({ path: "Company", select: { _id: 1, name: 1 } });
       res.send({
         apiStatus: "success",
         data: offers,
@@ -37,10 +36,10 @@ class offer {
       });
     }
   };
-  static setOfferState = (rqe, res) => {
+  static setOfferState = (req, res) => {
     offerModel
       .findOneAndUpdate(
-        { userId: req.user._id },
+        { userId: req.params.id },
         {
           $set: {
             offeracceptanc: req.body.offeracceptanc,
@@ -71,10 +70,7 @@ class offer {
   static deleteOffer = async (req, res) => {
     try {
       const deletedOffer = await offerModel.deleteOne({
-        userId: req.body.userId,
-        companyId: req.user._id,
-        jobId: req.body.jobId,
-        offerType: req.body.offerType,
+        _id:req.params.id
       });
       res.status(201).json(deletedOffer);
     } catch (e) {

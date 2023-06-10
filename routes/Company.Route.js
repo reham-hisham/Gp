@@ -54,5 +54,5 @@ router.post(
 router.get("/alljobpost", companyAuth, jopPostController.getAllJobPosts);
 router.get("/onjobpost/:id", companyAuth, jopPostController.getOneJobPosts);
 router.post("/sendJoboffer", companyAuth, offer.sendOffer);
-
+router.delete('/deleteJobOffer/:id',companyAuth,offer.deleteOffer)
 module.exports = router;
