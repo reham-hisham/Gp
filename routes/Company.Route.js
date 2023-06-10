@@ -8,6 +8,7 @@ const imagecontroller = require("../controllers/common/image.controller");
 const jopPostController = require("../controllers/company/jobpost.controller");
 const CompanyPostController = require("../controllers/company/post.controller");
 const companyProfileController = require("../controllers/company/profile.controller");
+const offer = require("../controllers/jobOffer/offer");
 const companyAuth = require("../middleware/company");
 router.post("/registration", companyProfileController.register);
 router.post("/confirmation", companyProfileController.confiremOtp);
@@ -52,5 +53,6 @@ router.post(
 );
 router.get("/alljobpost", companyAuth, jopPostController.getAllJobPosts);
 router.get("/onjobpost/:id", companyAuth, jopPostController.getOneJobPosts);
+router.post("/sendJoboffer", companyAuth, offer.sendOffer);
 
 module.exports = router;
