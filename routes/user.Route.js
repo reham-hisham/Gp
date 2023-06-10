@@ -51,6 +51,6 @@ router.post("/companyPosts/:id" ,notstrictauth, postController.getCompanyPosts)
 router.get('/country',  userController.getAllCountrisInWorld)
 router.post('/city',  userController.getcities)
 router.get('/recieveJobOffers',auth,offers.recieveOffers)
-router.put('/setOfferState',auth,offers.setOfferState)
+router.put('/setOfferState/:id',auth,offers.setOfferState)
 
 module.exports = router;
