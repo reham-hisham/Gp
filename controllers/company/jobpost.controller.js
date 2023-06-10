@@ -8,20 +8,20 @@ class posts {
       console.log(req.body.industry);
       const post = await new jobPostModel(req.body);
       post.hiringOrganization = req.user._id;
-   
+
       const user = await userModel
         .find({ name: "reham100" })
         .select("name email cv");
-        user.forEach(element => {
-          post.matchedUsers.push({"userId":element._id , rank:45 })  
-        });
-        await post.save();
-       const p = await jobPostModel.findOne({_id : post._id}).populate({path :"matchedUsers.userId" , select:"name email cv"})
-       
-        
+      user.forEach((element) => {
+        post.matchedUsers.push({ userId: element._id, rank: 45 });
+      });
+      await post.save();
+      const p = await jobPostModel
+        .findOne({ _id: post._id })
+        .populate({ path: "matchedUsers.userId", select: "name email cv" });
+
       res.send({
         post: p,
-
       });
       //  await model.getCvs(post , res)
     } catch (error) {
@@ -49,9 +49,11 @@ class posts {
   };
   static getAllJobPosts = async (req, res) => {
     try {
-     const jobpost= await jobPostModel.find({
-        hiringOrganization: req.user._id,
-      }).populate({path :"matchedUsers.userId" , select:"name email cv"})
+      const jobpost = await jobPostModel
+        .find({
+          hiringOrganization: req.user._id,
+        })
+        .populate({ path: "matchedUsers.userId", select: "name email cv" });
       res.send(jobpost);
     } catch (error) {
       res.status(400).send({
@@ -61,12 +63,17 @@ class posts {
       });
     }
   };
-  static getAllJobPosts = async (req, res) => {
+  static getOneJobPosts = async (req, res) => {
     try {
-     const jobpost= await jobPostModel.find({
-      _id:req.params.id,
-        hiringOrganization: req.user._id,
-      }).populate({path :"matchedUsers.userId" , select:"name email cv"})
+      const jobpost = await jobPostModel
+        .findOne({
+          _id: req.params.id,
+          hiringOrganization: req.user._id,
+        })
+        .populate({
+          path: "matchedUsers.userId",
+          select: "name email cv title",
+        });
       res.send(jobpost);
     } catch (error) {
       res.status(400).send({
