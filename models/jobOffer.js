@@ -1,8 +1,5 @@
 const mongoose = require("mongoose");
-<<<<<<< HEAD
-=======
-const company=require('..//models/company.model')
->>>>>>> c6435e0d06e112246ee45787740671d875b13754
+const company = require("..//models/company.model");
 const offerSchema = mongoose.Schema(
   {
     companyId: {
