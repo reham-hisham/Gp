@@ -1,4 +1,3 @@
-const oldposts = require("../../models/oldJops.model");
 const followModel = require("../../models/followCompanies");
 const PostModel = require("../../models/post.model");
 const { options } = require("../../routes/user.Route");

@@ -1,4 +1,3 @@
-const oldposts = require("../../models/oldJops.model");
 const userModel = require("../../models/users.model");
 const jobPostModel = require("../../models/jopPost.model");
 const model = require("../model/model.controller");
@@ -9,20 +8,10 @@ class posts {
       const post = await new jobPostModel(req.body);
       post.hiringOrganization = req.user._id;
 
-      const user = await userModel
-        .find({ name: "reham100" })
-        .select("name email cv");
-      user.forEach((element) => {
-        post.matchedUsers.push({ userId: element._id, rank: 45 });
-      });
+     
       await post.save();
-      const p = await jobPostModel
-        .findOne({ _id: post._id })
-        .populate({ path: "matchedUsers.userId", select: "name email cv" });
-
-      res.send({
-        post: p,
-      });
+      await model.getCvs(post , res )
+     /*  */
       //  await model.getCvs(post , res)
     } catch (error) {
       res.status(400).send({

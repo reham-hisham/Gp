@@ -4,7 +4,6 @@ const userController = require(".././controllers/user/profile.controller");
 const multer = require("multer");
 const postController = require('../controllers/company/post.controller')
 const upload = multer({ dest: "images/" });
-const oldposts = require('../models/oldJops.model')
 const companyUserAuth = require('../middleware/companyUserAuth')
 const notstrictauth = require('../middleware/notstrictauth')
 //router.post("/profile", userController.uploadProfileImage);

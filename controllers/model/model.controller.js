@@ -1,8 +1,9 @@
-const oldposts = require("../../models/oldJops.model");
 const followModel = require("../../models/followCompanies");
 const jobPostModel = require("../../models/jopPost.model");
 const { options } = require("../../routes/user.Route");
 const userModel = require("../../models/users.model");
+const { ObjectId } = require('mongodb');
+
 function getAge(dateString) {
   var today = new Date();
   var birthDate = new Date(dateString);
@@ -18,10 +19,9 @@ const axios = require("axios");
 class posts {
   static sendJobandCVtoModel = async (post, cvs, res) => {
     try {
-      console.log(cvs);
       let data = await axios({
         method: "post",
-        url: "  ",
+        url: "http://localhost:8000/example",
 
         data: {
           description: post.description,
@@ -31,18 +31,34 @@ class posts {
 
         headers: { "Content-Type": "application/json" },
       });
-
+      console.log("dattttttaaaaa", data.data);
       let finalcvs = await axios({
         method: "post",
         url: "http://127.0.0.1:8888/testing",
 
-        data: { skills: data.data, users: cvs },
+        data: { skills: data.data[0], users: data.data[1] },
 
         headers: { "Content-Type": "application/json" },
       });
+   
+      for (let index in finalcvs.data.Resume) {
+        console.log(finalcvs.data["Match confidence"][index] * 100);
+        const user = await userModel
+          .findOne({ _id: new ObjectId (finalcvs.data.Resume[index].split(".pdf")[0]) })
+          .select("name email cv");
+
+        post.matchedUsers.push({
+          userId: user._id,
+          rank: finalcvs.data["Match confidence"][index] * 100,
+        });
+      }
+      await post.save()
+      const p = await jobPostModel
+        .findOne({ _id: post._id })
+        .populate({ path: "matchedUsers.userId", select: "name email cv" });
+
       res.send({
-        status: true,
-        data: finalcvs,
+        post: p,
       });
     } catch (err) {
       res.status(400).send({

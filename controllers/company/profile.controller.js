@@ -4,7 +4,6 @@ const cloudinaryhelper = require("../../middleware/cloudinary");
 const companyFollowModel = require("../../models/companiesFollowCompanies");
 const otp = require("../../helper/sendOTP");
 const sendEmail = require("../../helper/sendEmail");
-const oldposts = require("../../models/oldJops.model");
 const followModel = require("../../models/companiesFollowCompanies");
 const Image = require("../common/image.controller");
 class company extends Image {
