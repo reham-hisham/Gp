@@ -2,7 +2,7 @@ const followModel = require("../../models/followCompanies");
 const jobPostModel = require("../../models/jopPost.model");
 const { options } = require("../../routes/user.Route");
 const userModel = require("../../models/users.model");
-const { ObjectId } = require('mongodb');
+const { ObjectId } = require("mongodb");
 
 function getAge(dateString) {
   var today = new Date();
@@ -36,23 +36,26 @@ class posts {
         method: "post",
         url: "http://127.0.0.1:8888/testing",
 
-        data: { skills: data.data[0], users:cvs  , model :data.data[1]},
+        data: { skills: data.data[0], users: cvs, model: data.data[1] },
 
         headers: { "Content-Type": "application/json" },
       });
-   
-      for (let index in finalcvs.data.Resume) {
-        console.log(finalcvs.data["Match confidence"][index] * 100);
-        const user = await userModel
-          .findOne({ _id: new ObjectId (finalcvs.data.Resume[index].split(".pdf")[0]) })
-          .select("name email cv");
 
-        post.matchedUsers.push({
-          userId: user._id,
-          rank: finalcvs.data["Match confidence"][index] * 100,
-        });
+      for (let index in finalcvs.data.Resume) {
+        if (finalcvs.data["Match confidence"][index] * 100 >= 50) {
+          const user = await userModel
+            .findOne({
+              _id: new ObjectId(finalcvs.data.Resume[index].split(".pdf")[0]),
+            })
+            .select("name email cv");
+
+          post.matchedUsers.push({
+            userId: user._id,
+            rank: finalcvs.data["Match confidence"][index] * 100,
+          });
+        }
       }
-      await post.save()
+      await post.save();
       const p = await jobPostModel
         .findOne({ _id: post._id })
         .populate({ path: "matchedUsers.userId", select: "name email cv" });

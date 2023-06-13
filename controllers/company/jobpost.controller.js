@@ -8,10 +8,9 @@ class posts {
       const post = await new jobPostModel(req.body);
       post.hiringOrganization = req.user._id;
 
-     
       await post.save();
-      await model.getCvs(post , res )
-     /*  */
+      await model.getCvs(post, res);
+      /*  */
       //  await model.getCvs(post , res)
     } catch (error) {
       res.status(400).send({
@@ -38,9 +37,12 @@ class posts {
   };
   static getAllJobPosts = async (req, res) => {
     try {
-     const jobpost= await jobPostModel.find({
-        hiringOrganization: req.user._id,
-      }).populate({path :"matchedUsers.userId" , select:"name email cv"})
+      const jobpost = await jobPostModel
+        .find({
+          hiringOrganization: req.user._id,
+        })
+        .populate({ path: "matchedUsers.userId", select: "name email cv" })
+        .sort({ createdAt: 1 });
       res.send(jobpost);
     } catch (error) {
       res.status(400).send({
