@@ -41,7 +41,8 @@ class posts {
         .find({
           hiringOrganization: req.user._id,
         })
-        .populate({ path: "matchedUsers.userId", select: "name email cv" });
+        .populate({ path: "matchedUsers.userId", select: "name email cv" })
+        .sort({ createdAt: 1 });
       res.send(jobpost);
     } catch (error) {
       res.status(400).send({
@@ -61,8 +62,7 @@ class posts {
         .populate({
           path: "matchedUsers.userId",
           select: "name email cv title",
-        })
-        .sort({ createdAt: 1 });
+        });
       res.send(jobpost);
     } catch (error) {
       res.status(400).send({
