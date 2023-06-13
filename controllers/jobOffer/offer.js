@@ -1,9 +1,11 @@
+const { default: mongoose } = require("mongoose");
 const CompanyModel = require("../../models/company.model");
 const offerModel = require("../../models/jobOffer");
 class offer {
   static sendOffer = async (req, res) => {
     try {
       const jobOffer = new offerModel(req.body);
+      jobOffer.companyId=req.user._id;
       jobOffer.save();
       res.send({
         apiStatus: "success",
@@ -21,7 +23,7 @@ class offer {
     try {
       const offers = await offerModel
         .find({ userId: req.user._id })
-        .populate({ path: "Company", select: { _id: 1, name: 1, image: 1 } });
+        .populate({ path: "companyId", select: { _id: 1, name: 1, image: 1 } });
       res.send({
         apiStatus: "success",
         data: offers,
@@ -81,5 +83,19 @@ class offer {
       });
     }
   };
+  static viewMyJobOffers=async (req,res)=>{
+  try{  let myOffers
+   myOffers=await offerModel.find({companyId:req.user._id})
+
+   res.send(myOffers)
+  }
+  catch(e){
+    res.status(400).send({
+      apiStatus: false,
+      message: e.message,
+    });
+  }
+
+  }
 }
 module.exports = offer;
