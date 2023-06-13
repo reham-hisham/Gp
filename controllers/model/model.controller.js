@@ -36,7 +36,7 @@ class posts {
         method: "post",
         url: "http://127.0.0.1:8888/testing",
 
-        data: { skills: data.data[0], users: data.data[1] },
+        data: { skills: data.data[0], users:cvs  , model :data.data[1]},
 
         headers: { "Content-Type": "application/json" },
       });

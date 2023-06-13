@@ -58,6 +58,7 @@ router.post(
   companyUserAuth,
   companyProfileController.ultimateFollowForcompanies
 );
+router.get("company/:id" , companyUserAuth , companyProfileController.getCompanyDataById)
 router.get("/alljobpost", companyAuth, jopPostController.getAllJobPosts);
 router.get("/onjobpost/:id", companyAuth, jopPostController.getOneJobPosts);
 router.post("/sendJoboffer", companyAuth, offer.sendOffer);
