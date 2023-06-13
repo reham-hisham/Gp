@@ -21,8 +21,7 @@ class offer {
     try {
       const offers = await offerModel
         .find({ userId: req.user._id })
-        .populate({ path: "Company", select: { _id: 1, name: 1, image: 1 } });
-      await offers.save();
+        .populate({ path: "companyId", select: { _id: 1, name: 1, image: 1 } });
       res.send({
         apiStatus: "success",
         data: offers,
