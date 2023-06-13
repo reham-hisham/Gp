@@ -48,7 +48,7 @@ req.user.image = uploadedData.secure_url;
       
       await req.user.save();
 
-      res.send(req.user.image);
+      res.send({Data:req.user.image});
     } catch (error) {
       res.status(400).send({
         apiStatus: false,
