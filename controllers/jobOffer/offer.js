@@ -5,7 +5,7 @@ class offer {
   static sendOffer = async (req, res) => {
     try {
       const jobOffer = new offerModel(req.body);
-      jobOffer.companyId=req.user._id;
+      jobOffer.companyId = req.user._id;
       jobOffer.save();
       res.send({
         apiStatus: "success",
@@ -36,13 +36,14 @@ class offer {
       });
     }
   };
-  static setOfferState = (rqe, res) => {
+  static setOfferState = (req, res) => {
+    console.log(req.body.offeracceptanc);
     offerModel
       .findOneAndUpdate(
         { userId: req.user._id },
         {
           $set: {
-            offeracceptanc: req.body.offeracceptanc,
+            offerAcceptance: req.body.offeracceptanc,
             comment: req.body.comment,
           },
         }
@@ -83,19 +84,18 @@ class offer {
       });
     }
   };
-  static viewMyJobOffers=async (req,res)=>{
-  try{  let myOffers
-   myOffers=await offerModel.find({companyId:req.user._id})
+  static viewMyJobOffers = async (req, res) => {
+    try {
+      let myOffers;
+      myOffers = await offerModel.find({ companyId: req.user._id });
 
-   res.send(myOffers)
-  }
-  catch(e){
-    res.status(400).send({
-      apiStatus: false,
-      message: e.message,
-    });
-  }
-
-  }
+      res.send(myOffers);
+    } catch (e) {
+      res.status(400).send({
+        apiStatus: false,
+        message: e.message,
+      });
+    }
+  };
 }
 module.exports = offer;

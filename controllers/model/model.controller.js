@@ -59,7 +59,7 @@ class posts {
       const p = await jobPostModel
         .findOne({ _id: post._id })
         .populate({ path: "matchedUsers.userId", select: "name email cv" });
-
+      console.log(p);
       res.send({
         post: p,
       });

@@ -57,7 +57,7 @@ const userSchema = mongoose.Schema(
       type: String,
     },
     birthdate: {
-      type: String
+      type: String,
     },
     isBlocked: { type: Boolean, default: false },
     tokens: [
@@ -76,12 +76,11 @@ const userSchema = mongoose.Schema(
       required: false,
     },
     minSalary: {
-      value: { type: Number,       required: false,
-      },
+      value: { type: Number, required: false },
       currency: String,
     },
     industry: {
-      type:String,
+      type: String,
       enum: [
         "Management",
         "Marketing and Advertising",
@@ -115,10 +114,9 @@ const userSchema = mongoose.Schema(
         "Real Estate",
         "Media and Entertainment",
         "Government and Public Services",
-        "other"
+        "other",
       ],
-      default:"other"
-      
+      default: "other",
     },
     yearsOfExperience: Number,
     image: String,
@@ -132,31 +130,25 @@ const userSchema = mongoose.Schema(
     ],
 
     currentCareerlevel: {
-      type:String,
+      type: String,
       enum: [
         "Student",
         "Entry Level",
         "Experienced",
         "Manager",
-        "senior Management",
-        ""
+        "Senior Management",
+        "",
       ],
-      default:""
+      default: "",
     },
     jopType: {
-      type:String,
+      type: String,
 
-      enum: [
-        "Full Time",
-        "Part Time",
-        "intership",
-        "other",
-        ""
-      ],
-      default:""
+      enum: ["Full Time", "Part Time", "intership", "other", ""],
+      default: "",
     },
     currentEducationalLevel: {
-      type:String,
+      type: String,
 
       enum: [
         "Bachelors Degree",
@@ -165,9 +157,9 @@ const userSchema = mongoose.Schema(
         "High school",
         "Vocational",
         "Diploma",
-        ""
+        "",
       ],
-      default:""
+      default: "",
     },
     fieldOfStudy: String,
     University: String,

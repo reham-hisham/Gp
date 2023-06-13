@@ -58,10 +58,26 @@ router.post(
   companyUserAuth,
   companyProfileController.ultimateFollowForcompanies
 );
-router.get("company/:id" , companyUserAuth , companyProfileController.getCompanyDataById)
+router.get(
+  "company/:id",
+  companyUserAuth,
+  companyProfileController.getCompanyDataById
+);
 router.get("/alljobpost", companyAuth, jopPostController.getAllJobPosts);
 router.get("/onjobpost/:id", companyAuth, jopPostController.getOneJobPosts);
 router.post("/sendJoboffer", companyAuth, offer.sendOffer);
 router.delete("/deleteJobOffer/:id", companyAuth, offer.deleteOffer);
-router.get("/showMyoffers",companyAuth,offer.viewMyJobOffers)
+router.get("/showMyoffers", companyAuth, offer.viewMyJobOffers);
+router.post(
+  "/post",
+  companyAuth,
+  upload.single("postImage"),
+  CompanyPostController.create
+);
+router.get("/profile", companyAuth, companyProfileController.getCompanyData);
+router.get(
+  "/company/:id",
+  companyUserAuth,
+  companyProfileController.getCompanyDataById
+);
 module.exports = router;

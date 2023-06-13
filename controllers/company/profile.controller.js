@@ -4,7 +4,7 @@ const cloudinaryhelper = require("../../middleware/cloudinary");
 const companyFollowModel = require("../../models/companiesFollowCompanies");
 const otp = require("../../helper/sendOTP");
 const sendEmail = require("../../helper/sendEmail");
-const followModel = require("../../models/companiesFollowCompanies");
+const followModel = require("../../models/followCompanies");
 const Image = require("../common/image.controller");
 class company extends Image {
   static register = async (req, res) => {
@@ -14,7 +14,7 @@ class company extends Image {
       CompanyData.OTP = -1;
 
       await CompanyData.save();
-      const n = await new followModel({
+      const n = await new companyFollowModel({
         followerId: CompanyData._id,
         companyId: [CompanyData._id],
       }).save();
@@ -137,45 +137,55 @@ class company extends Image {
     });
   };
   static getCompanyDataById = async (req, res) => {
-    const company = await CompanyModel.findById(req.params.id);
-    let isFollowed = false;
-    let userRole = req.user.collection.name;
-    if (req.user && userRole == "companies") {
-      let follow = await companyFollowModel.findOne({
-        followerId: req.user._id,
+    try {
+      console.log("daopmsdmpomqwpmdqpwodmpqwodmqw");
+      const company = await CompanyModel.findById(req.params.id);
+      let isFollowed = false;
+      let userRole = req.user.collection.name;
+      if (req.user && userRole == "companies") {
+        let follow = await companyFollowModel.findOne({
+          followerId: req.user._id,
+        });
+        console.log(follow);
+        if (follow)
+          follow.companyId.forEach((e) => {
+            if (e.toString() == company._id.toString()) {
+              isFollowed = true;
+            }
+          });
+      } else if (req.user && userRole == "users") {
+        console.log(userRole);
+        let follow = await followModel.findOne({ followerId: req.user._id });
+        console.log(follow);
+        if (follow)
+          follow.companyId.forEach((e) => {
+            if (e.toString() == company._id.toString()) {
+              isFollowed = true;
+            }
+          });
+      }
+      res.send({
+        apiStatus: true,
+        data: {
+          name: company.name,
+          address: company.address,
+          number: company.number,
+          email: company.email,
+          about: company.about,
+          country: company.country,
+          image: company.image,
+          city: company.city,
+          numberOfemployee: company.numberOfemployee,
+          industry: company.industry,
+          isFollowed: isFollowed,
+        },
       });
-      console.log(follow.companyId);
-      follow.companyId.forEach((e) => {
-        if (e.toString() == company._id.toString()) {
-          isFollowed = true;
-        }
-      });
-    } else if (req.user && userRole == "users") {
-      console.log(userRole);
-      let follow = await followModel.findOne({ followerId: req.user._id });
-      console.log(follow.companyId);
-      follow.companyId.forEach((e) => {
-        if (e.toString() == company._id.toString()) {
-          isFollowed = true;
-        }
+    } catch (err) {
+      res.send({
+        APIstatus: "failed",
+        Data: err.message,
       });
     }
-    res.send({
-      apiStatus: true,
-      data: {
-        name: company.name,
-        address: company.address,
-        number: company.number,
-        email: company.email,
-        about: company.about,
-        country: company.country,
-        image: company.image,
-        city: company.city,
-        numberOfemployee: company.numberOfemployee,
-        industry: company.industry,
-        isFollowed: isFollowed,
-      },
-    });
   };
   static logout = async (req, res) => {
     try {

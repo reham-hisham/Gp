@@ -7,6 +7,8 @@ const companiesFollow = require("../../models/companiesFollowCompanies");
 class posts {
   static create = async (req, res) => {
     try {
+      console.log("eqwneoqineoqiwnoeqnwoienqwoen");
+      console.log(req.body);
       const post = await new PostModel(req.body);
       post.user = req.user._id;
       console.log(req.file);

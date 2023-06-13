@@ -8,6 +8,7 @@ const Image = require("../common/image.controller");
 const companyModel = require("../../models/company.model");
 const user = require("../../models/users.model");
 const followModel = require("../../models/followCompanies");
+
 const postModel = require("../../models/post.model");
 // Get instance by resolving ClamScan promise object
 const { Country, State, City } = require("country-state-city");
@@ -17,6 +18,10 @@ class User extends Image {
     try {
       const userData = new userModel(req.body);
       userData.minSalary = { value: req.body.minSalary };
+      const n = await new followModel({
+        followerId: userData._id,
+        companyId: [userData._id],
+      }).save();
       await userData.save();
       await this.SendOTP(req, res);
       res.status(200).send();
@@ -76,7 +81,7 @@ class User extends Image {
       if (userData.isBlocked) {
         throw new Error("Blocked ");
       }
-      console.log(userData)
+      console.log(userData);
       const token = await userData.generateToken();
       if (userData.OTP != 0) {
         console.log(userData.OTP);
