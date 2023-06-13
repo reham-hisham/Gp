@@ -9,6 +9,7 @@ const companyModel = require("../../models/company.model");
 const user = require("../../models/users.model");
 const followModel = require("../../models/followCompanies");
 const postModel = require("../../models/post.model");
+const path = require('path');
 // Get instance by resolving ClamScan promise object
 const { Country, State, City } = require("country-state-city");
 // OTP = 0 -> can login
@@ -36,7 +37,16 @@ class User extends Image {
         path: req.file.path,
         folder: `${user.id}/cv`,
       });
+
       user.cv = uploadedData.secure_url;
+      const currentExtension = path.extname(user.cv);
+
+      // Specify the new extension
+      const newExtension = ".pdf";
+
+      // Replace the current extension with the new extension
+      const newUrl =  user.cv.replace(currentExtension, newExtension);
+      user.cv = newUrl;
       user.public_id = uploadedData.public_id;
       await user.save();
 
@@ -76,7 +86,7 @@ class User extends Image {
       if (userData.isBlocked) {
         throw new Error("Blocked ");
       }
-      console.log(userData)
+      console.log(userData);
       const token = await userData.generateToken();
       if (userData.OTP != 0) {
         console.log(userData.OTP);
