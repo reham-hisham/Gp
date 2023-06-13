@@ -107,7 +107,9 @@ class posts {
         cvs = cvs.filter((e) => e.cv != null);
         console.log(cvs);
       }
-
+      if (cvs.length == 0) {
+        res.send("NO CVS IN DATABASE MATCH YOUR REQUERMINTS");
+      }
       await this.sendJobandCVtoModel(jobPost, cvs, res);
       //await this.sendJobandCVtoModel(jobPost , cvs)
     } catch (error) {
