@@ -63,14 +63,6 @@ const jobPostSchema = new Schema(
       },
     ],
 
-    // validThrough: {
-    //   type: Date,
-
-    // },
-    employmentType: {
-      type: String,
-      enum: ["women", "men"],
-    },
     numberOfresivedCVs: {
       type: Number,
     },

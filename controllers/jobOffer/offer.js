@@ -4,9 +4,9 @@ const offerModel = require("../../models/jobOffer");
 class offer {
   static sendOffer = async (req, res) => {
     try {
-      const jobOffer = new offerModel(req.body);
+      const jobOffer = await new offerModel(req.body);
       jobOffer.companyId = req.user._id;
-      jobOffer.save();
+      await jobOffer.save();
       res.send({
         apiStatus: "success",
         data: jobOffer,
@@ -37,10 +37,10 @@ class offer {
     }
   };
   static setOfferState = (req, res) => {
-    console.log(req.body.offeracceptanc);
+    console.log(req.body);
     offerModel
       .findOneAndUpdate(
-        { userId: req.user._id },
+        { _id: req.params.id },
         {
           $set: {
             offerAcceptance: req.body.offeracceptanc,

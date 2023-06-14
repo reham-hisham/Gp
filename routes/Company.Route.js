@@ -80,4 +80,6 @@ router.get(
   companyUserAuth,
   companyProfileController.getCompanyDataById
 );
+router.get("/showMyoffers", companyAuth, offer.viewMyJobOffers);
+
 module.exports = router;
